@@ -3,6 +3,8 @@
 
 //Standard Headers
 #include <vector>
+#include <string>
+#include <fstream>
 
 //Windows Specific Defines
 #ifdef _WIN32
@@ -13,7 +15,7 @@
 		std::abort(); \
 		glfwTerminate(); \
 	}
-#endif
+#endif // _WIN32
 
 //OpenGL/Helper headers
 #include <GL/glew.h>
@@ -23,4 +25,5 @@
 #include "Singleton.h"
 
 using namespace std;
-#endif
+
+#endif // STANDARDINCLUDES_H

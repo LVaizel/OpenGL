@@ -1,10 +1,12 @@
 #include "GameController.h"
 #include "WindowController.h"
 #include "Mesh.h"
+#include "Shader.h"
 
 GameController::GameController()
 {
-	m_mesh = { };
+	m_mesh = nullptr;
+	m_shader = nullptr;
 }
 
 GameController::~GameController()
@@ -14,6 +16,12 @@ GameController::~GameController()
 		m_mesh->Cleanup();
 		delete m_mesh;
 		m_mesh = nullptr;
+	}
+	if (m_shader != nullptr)
+	{
+		m_shader->Cleanup();
+		delete m_shader;
+		m_shader = nullptr;
 	}
 }
 
@@ -27,8 +35,12 @@ void GameController::Initialize()
 
 void GameController::RunGame()
 {
+	m_shader = new Shader();
+	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
 	m_mesh = new Mesh();
-	m_mesh->Create();
+	m_mesh->Create(m_shader);
+
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
 		glClear(GL_COLOR_BUFFER_BIT);//Clear screen

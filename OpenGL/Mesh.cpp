@@ -1,16 +1,20 @@
 #include "Mesh.h"
+#include "Shader.h"
 
 Mesh::Mesh()
 {
 	m_vertexBuffer = 0;
+	m_vertexData = { };
+	m_shader = nullptr;
 }
 
 Mesh::~Mesh()
 {
 }
 
-void Mesh::Create()
+void Mesh::Create(Shader* _shader)
 {
+	m_shader = _shader;
 	m_vertexData = {
 		-1.0f, -1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
@@ -28,9 +32,11 @@ void Mesh::Cleanup()
 
 void Mesh::Render()
 {
-	glEnableVertexAttribArray(0);
+	glUseProgram(m_shader->GetProgramID());
+
+	glEnableVertexAttribArray(m_shader->GetAttrVertices());
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glVertexAttribPointer(0, 3/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 0/*Stride*/, (void*)0/*Offset*/);
+	glVertexAttribPointer(m_shader->GetAttrVertices(), 3/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 0/*Stride*/, (void*)0/*Offset*/);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 }

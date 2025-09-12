@@ -1,0 +1,5 @@
+#version 120 // OpenGL version 2.1 (minimum requirement)
+in vec3 vertices; // Vertex position input
+void main() {
+	gl_Position = vec4(vertices, 1.0); // Pass through shader, pass the vertex position to next shader
+}

@@ -4,12 +4,13 @@
 #include "StandardIncludes.h"
 
 class Mesh;
+class Shader;
 
 class GameController : public Singleton<GameController>
 {
 private:
 	Mesh* m_mesh;
-
+	Shader* m_shader;
 public:
 	GameController();
 	virtual ~GameController();
