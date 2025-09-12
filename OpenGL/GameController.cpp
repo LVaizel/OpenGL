@@ -2,6 +2,7 @@
 #include "WindowController.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "ToolWindow.h"
 
 GameController::GameController()
 {
@@ -35,6 +36,9 @@ void GameController::Initialize()
 
 void GameController::RunGame()
 {
+	// Show Tool Window
+	PrimitiveDrawTest::ToolWindow^ toolWindow = gcnew PrimitiveDrawTest::ToolWindow();
+	toolWindow->Show();
 	m_shader = new Shader();
 	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
@@ -43,6 +47,15 @@ void GameController::RunGame()
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
+		System::Windows::Forms::Application::DoEvents();
+		
+		GLint loc = glGetUniformLocation(m_shader->GetProgramID(), "RenderRedChannel");
+		glUniform1i(loc, toolWindow->RenderRedChannel);
+		loc = glGetUniformLocation(m_shader->GetProgramID(), "RenderGreenChannel");
+		glUniform1i(loc, toolWindow->RenderGreenChannel);
+		loc = glGetUniformLocation(m_shader->GetProgramID(), "RenderBlueChannel");
+		glUniform1i(loc, toolWindow->RenderBlueChannel);
+
 		glClear(GL_COLOR_BUFFER_BIT);//Clear screen
 		m_mesh->Render();//Draw triangle
 		glfwSwapBuffers(win); //Swap the front and back buffer
