@@ -1,0 +1,21 @@
+#ifndef CAMERA_H
+#define CAMERA_H
+
+#include "StandardIncludes.h"
+class Camera
+{
+private:
+	glm::mat4 m_projection;
+	glm::mat4 m_view;
+
+public:
+	Camera();
+	Camera(Resolution _screenResolution);
+	virtual ~Camera();
+
+	glm::mat4 GetProjection() const { return m_projection; }
+	glm::mat4 GetView() const { return m_view; }
+};
+
+#endif // CAMERA_H
+

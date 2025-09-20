@@ -5,6 +5,7 @@ Shader::Shader()
 	m_programID = 0;
 	m_attrVertices = 0;
 	m_result = GL_FALSE;
+	m_attrWVP = 0;
 	m_infoLogLength = 0;
 }
 
@@ -22,6 +23,7 @@ void Shader::Cleanup() {
 void Shader::LoadAttributes()
 {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
+	m_attrWVP = glGetUniformLocation(m_programID, "WVP");//Get handle for WVP matrix
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _ID)
