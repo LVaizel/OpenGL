@@ -1,10 +1,13 @@
 #ifndef STANDARDINCLUDES_H
 #define STANDARDINCLUDES_H
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 //Standard Headers
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 //Windows Specific Defines
 #ifdef _WIN32
@@ -20,7 +23,8 @@
 //OpenGL/Helper headers
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "Singleton.h"
 

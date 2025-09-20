@@ -56,6 +56,9 @@
     <ClInclude Include="ToolWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader" />
