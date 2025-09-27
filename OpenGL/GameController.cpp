@@ -52,9 +52,7 @@ void GameController::RunGame()
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
+		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 

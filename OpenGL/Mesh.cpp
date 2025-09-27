@@ -49,6 +49,6 @@ void Mesh::Render(glm::mat4 _wvp)
 	glVertexAttribPointer(m_shader->GetAttrColors(), 4/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 7 * sizeof(float)/*Stride*/, (void*)(3 * sizeof(float))/*Offset*/);
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size()/7);
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 }
