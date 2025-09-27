@@ -61,6 +61,7 @@ void Mesh::Cleanup()
 
 void Mesh::Render(glm::mat4 _wvp)
 {
+	m_world = glm::rotate(m_world, 0.001f, { 0.0f, 1.0f, 0.0f });
 	_wvp *= m_world;
 
 	glUseProgram(m_shader->GetProgramID());
@@ -73,12 +74,10 @@ void Mesh::Render(glm::mat4 _wvp)
 	glEnableVertexAttribArray(m_shader->GetAttrColors());
 	glVertexAttribPointer(m_shader->GetAttrColors(), 4/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 7 * sizeof(float)/*Stride*/, (void*)(3 * sizeof(float))/*Offset*/);
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]);
-
-
 	
-	m_world = glm::rotate(m_world, 0.001f, { 0.0f, 1.0f, 0.0f });
 	glDrawElements(GL_TRIANGLES, m_indexData.size(), GL_UNSIGNED_BYTE, (void*)0);
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
+	glDisableVertexAttribArray(m_shader->GetAttrColors());
 }
 
 void Mesh::Render(glm::mat4 _wvp, GLenum _mode)

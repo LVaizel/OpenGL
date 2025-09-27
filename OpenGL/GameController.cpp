@@ -49,7 +49,7 @@ void GameController::RunGame()
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
 		
-		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
+		m_mesh->Render(glm::mat4(1.0f));
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
