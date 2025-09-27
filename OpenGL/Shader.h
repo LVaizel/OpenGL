@@ -8,7 +8,6 @@ class Shader
 private:
 	GLuint m_programID;
 	GLuint m_attrVertices;
-	GLuint m_attrColors;
 	GLint m_result = GL_FALSE;
 	GLuint m_attrWVP;
 	int m_infoLogLength;
@@ -26,7 +25,6 @@ public:
 	//Accessors
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
-	GLuint GetAttrColors() { return m_attrColors; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	//Methods

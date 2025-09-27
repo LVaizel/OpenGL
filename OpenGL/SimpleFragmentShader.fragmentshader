@@ -1,8 +1,9 @@
 #version 120 // OpenGL version 2.1 (minimum requirement)
 
-in vec4 retColor; // Input from vertex shader
-out vec4 fragColor; // Output color
+uniform int RenderRedChannel;
+uniform int RenderGreenChannel;
+uniform int RenderBlueChannel;
 
 void main() {
-	fragColor = retColor;
+	gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);
 }
