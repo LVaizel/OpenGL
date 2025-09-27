@@ -18,6 +18,7 @@ public:
 	void Create(Shader* _shader);
 	void Cleanup();
 	void Render(glm::mat4 _wvp);
+	void Render(glm::mat4 _wvp, GLenum _mode);
 };
 
 #endif // MESH_H

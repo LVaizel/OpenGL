@@ -48,11 +48,20 @@ void GameController::RunGame()
 
 	int currentSetup = 0;
 	bool spacePressedLastFrame = false;
-
+	GLenum drawModes[3] = { GL_POINTS , GL_LINE_LOOP, GL_TRIANGLE_FAN};
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
+		if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			if (!spacePressedLastFrame) {
+				currentSetup = (currentSetup + 1) % 3;
+				spacePressedLastFrame = true;
+			}
+		}
+		else {
+			spacePressedLastFrame = false;
+		}
+		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView(), drawModes[currentSetup]);
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
