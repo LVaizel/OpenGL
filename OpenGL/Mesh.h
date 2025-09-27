@@ -9,7 +9,9 @@ class Mesh
 private:
 	Shader* m_shader;
 	GLuint m_vertexBuffer;
+	GLuint m_indexBuffer;
 	vector<GLfloat> m_vertexData;
+	vector<GLuint> m_indexData;
 	glm::mat4 m_world;
 
 public:

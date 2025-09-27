@@ -33,11 +33,13 @@ void GameController::Initialize()
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW.");//Init GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//Ensure we can capture the escape key
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_CULL_FACE);
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
 void GameController::RunGame()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_shader = new Shader();
 	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
@@ -45,23 +47,9 @@ void GameController::RunGame()
 	m_mesh->Create(m_shader);
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
-
-	int currentSetup = 0;
-	bool spacePressedLastFrame = false;
-	GLenum drawModes[3] = { GL_POINTS , GL_LINE_LOOP, GL_TRIANGLE_FAN};
-	//View changes on pressing spacebar
 	do {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			if (!spacePressedLastFrame) {
-				currentSetup = (currentSetup + 1) % 3;
-				spacePressedLastFrame = true;
-			}
-		}
-		else {
-			spacePressedLastFrame = false;
-		}
-		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView(), drawModes[currentSetup]);
+		
+		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
