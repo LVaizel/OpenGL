@@ -33,13 +33,12 @@ void GameController::Initialize()
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW.");//Init GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//Ensure we can capture the escape key
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glEnable(GL_CULL_FACE);
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
+	glEnable(GL_CULL_FACE);
 }
 
 void GameController::RunGame()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_shader = new Shader();
 	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
@@ -48,8 +47,8 @@ void GameController::RunGame()
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
-		
-		m_mesh->Render(glm::mat4(1.0f));
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
