@@ -9,8 +9,11 @@ private:
 	GLuint m_programID;
 	GLuint m_attrVertices;
 	GLuint m_attrColors;
-	GLint m_result = GL_FALSE;
+	GLuint m_attrTexCoords;
+	GLuint m_sampler1;
 	GLuint m_attrWVP;
+
+	GLint m_result = GL_FALSE;
 	int m_infoLogLength;
 	
 	void CreateShaderProgram(const char* _vertexFilePath, const char* _fragmentFilePath);
@@ -27,6 +30,8 @@ public:
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
+	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
+	GLuint GetSampler() { return m_sampler1; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	//Methods

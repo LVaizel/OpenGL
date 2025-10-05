@@ -28,16 +28,25 @@ void Texture::LoadTexture(std::string fileName)
 
     GLubyte* data = stbi_load(fileName.c_str(), &m_width, &m_height, &m_channels, 0);
     M_ASSERT(data != nullptr, "Failed to load texture");
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
-    GLenum format = GL_RGB;
-    if (m_channels == 1)
-        format = GL_RED;
-    else if (m_channels == 3)
-        format = GL_RGB;
-    else if (m_channels == 4)
-        format = GL_RGBA;
+    stbi_image_free(data);
+}
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+void Texture::LoadTexture(std::string fileName, GLint _wrapperMethod)
+{
+    glGenTextures(1, &m_texture);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _wrapperMethod);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _wrapperMethod);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLubyte* data = stbi_load(fileName.c_str(), &m_width, &m_height, &m_channels, 0);
+    M_ASSERT(data != nullptr, "Failed to load texture");
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);

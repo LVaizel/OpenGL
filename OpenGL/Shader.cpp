@@ -5,6 +5,8 @@ Shader::Shader()
 	m_programID = 0;
 	m_attrVertices = 0;
 	m_attrColors = 0;
+	m_attrTexCoords = 0;
+	m_sampler1 = 0;
 	m_result = GL_FALSE;
 	m_attrWVP = 0;
 	m_infoLogLength = 0;
@@ -25,6 +27,8 @@ void Shader::LoadAttributes()
 {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
 	m_attrColors = glGetAttribLocation(m_programID, "colors");//Get handle for color buffer
+	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords");
+	m_sampler1 = glGetUniformLocation(m_programID, "sampler1");
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP");//Get handle for WVP matrix
 }
 
