@@ -49,15 +49,15 @@ void GameController::RunGame()
 	int currentSetup = 0;
 	bool spacePressedLastFrame = false;
 	m_mesh = new Mesh();
-	m_mesh->Create(m_shader, drawModes[2]);
+	m_mesh->Create(m_shader, drawModes[currentSetup]);
 
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS) {
 			if (!spacePressedLastFrame) {
-				m_mesh->Create(m_shader, drawModes[currentSetup]);
 				currentSetup = (currentSetup + 1) % 4;
+				m_mesh->Create(m_shader, drawModes[currentSetup]);
 				spacePressedLastFrame = true;
 			}
 		}

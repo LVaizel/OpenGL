@@ -56,10 +56,10 @@ void Mesh::Create(Shader* _shader, GLint _textureWrapperMethod)
 
 	m_vertexData = {
 		/* Position */ /* Color */      /* Texture Coords */
-		50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 2.0f,  // top-right
-		50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, // bottom-right  
-		-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, -1.0f, -1.0f, // bottom-left
-		-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 2.0f,  // top-left
+		50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 2.0f,  // top-right
+		50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 2.0f, 0.0f, // bottom-right  
+		-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+		-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 2.0f,  // top-left
 	};
 
 	glGenBuffers(1, &m_vertexBuffer);
