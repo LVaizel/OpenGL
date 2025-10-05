@@ -49,7 +49,7 @@ void GameController::RunGame()
 	int currentSetup = 0;
 	bool spacePressedLastFrame = false;
 	m_mesh = new Mesh();
-	m_mesh->Create(m_shader, drawModes[currentSetup]);
+	m_mesh->Create(m_shader, drawModes[2]);
 
 	//View changes on pressing spacebar
 	do {
@@ -64,7 +64,7 @@ void GameController::RunGame()
 		else {
 			spacePressedLastFrame = false;
 		}
-		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView(), drawModes[currentSetup]);
+		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 

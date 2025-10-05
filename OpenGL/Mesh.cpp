@@ -55,11 +55,11 @@ void Mesh::Create(Shader* _shader, GLint _textureWrapperMethod)
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg", _textureWrapperMethod);
 
 	m_vertexData = {
-		/* Position */ /* RGBA Color */ /* Texture Coords */
-		50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right
-		50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
-		-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-		-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
+		/* Position */ /* Color */      /* Texture Coords */
+		50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 2.0f,  // top-right
+		50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, // bottom-right  
+		-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, -1.0f, -1.0f, // bottom-left
+		-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 2.0f,  // top-left
 	};
 
 	glGenBuffers(1, &m_vertexBuffer);
