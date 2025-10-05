@@ -6,7 +6,8 @@ Mesh::Mesh()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_vertexData = { };
-	m_texture = { };
+	m_texture1 = { };
+	m_texture2 = { };
 	m_shader = nullptr;
 	m_world = glm::translate(glm::mat4(1.0f), glm::vec3(100, 100, 0));
 
@@ -23,8 +24,8 @@ void Mesh::Create(Shader* _shader)
 {
 	m_shader = _shader;
 
-	m_texture = Texture();
-	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
+	m_texture1 = Texture();
+	m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
 
 	m_vertexData = {
 		/* Position */ /* RGBA Color */ /* Texture Coords */
@@ -47,21 +48,60 @@ void Mesh::Create(Shader* _shader)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(double), m_indexData.data(), GL_STATIC_DRAW);
 }
 
-void Mesh::Create(Shader* _shader, GLint _textureWrapperMethod)
+void Mesh::Create(Shader* _shader, int mode)
 {
 	m_shader = _shader;
 
-	m_texture = Texture();
-	m_texture.LoadTexture("../Assets/Textures/Wood.jpg", _textureWrapperMethod);
+	switch (mode) 
+	{
+	case 1:
+		m_texture1 = Texture();
+		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
+		m_texture2.Cleanup();
+		m_texture2 = { };
 
-	m_vertexData = {
-		/* Position */ /* Color */      /* Texture Coords */
-		50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 2.0f,  // top-right
-		50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 2.0f, 0.0f, // bottom-right  
-		-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-		-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 2.0f,  // top-left
-	};
+		m_vertexData = {
+			/* Position */ /* RGBA Color */ /* Texture Coords */
+			50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right
+			50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
+			-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
+		};
 
+		break;
+	case 2:
+		m_texture1 = Texture();
+		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
+
+		m_texture2 = Texture();
+		m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
+
+		m_vertexData = {
+			/* Position */ /* RGBA Color */ /* Texture Coords */
+			50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // top-right
+			50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // bottom-right
+			-50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
+		};
+
+		break;
+	case 3:
+		m_texture1 = Texture();
+		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
+
+		m_texture2 = Texture();
+		m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
+
+		m_vertexData = {
+			/* Position */ /* RGBA Color */ /* Texture Coords */
+			50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right
+			50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
+			-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
+		};
+		break;
+	}
+	
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
@@ -79,7 +119,8 @@ void Mesh::Cleanup()
 {
 	glDeleteBuffers(1, &m_indexBuffer);
 	glDeleteBuffers(1, &m_vertexBuffer);
-	m_texture.Cleanup();
+	m_texture1.Cleanup();
+	m_texture2.Cleanup();
 }
 
 void Mesh::Render(glm::mat4 _wvp)
@@ -87,7 +128,14 @@ void Mesh::Render(glm::mat4 _wvp)
 	glUseProgram(m_shader->GetProgramID());
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_texture1.GetTexture());
+	glUniform1i(m_shader->GetSampler1(), 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture());
+	glUniform1i(m_shader->GetSampler2(), 1);
 
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
 	glVertexAttribPointer(m_shader->GetAttrVertices(), 3/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 8 * sizeof(float)/*Stride*/, (void*)0/*Offset*/);
@@ -101,6 +149,7 @@ void Mesh::Render(glm::mat4 _wvp)
 	m_rotation.y += 0.0001f;
 	glm::mat4 transform = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]);
+
 
 	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexData.size()), GL_UNSIGNED_INT, (void*)0);
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());

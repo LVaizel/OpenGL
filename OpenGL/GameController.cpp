@@ -42,22 +42,21 @@ void GameController::RunGame()
 	m_shader = new Shader();
 	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
-	GLint drawModes[4] = { GL_REPEAT , GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER };
-
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 
 	int currentSetup = 0;
 	bool spacePressedLastFrame = false;
 	m_mesh = new Mesh();
-	m_mesh->Create(m_shader, drawModes[currentSetup]);
+	m_mesh->Create(m_shader, currentSetup + 1);
 
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS) {
 			if (!spacePressedLastFrame) {
-				currentSetup = (currentSetup + 1) % 4;
-				m_mesh->Create(m_shader, drawModes[currentSetup]);
+				currentSetup = (currentSetup + 1) % 3;
+				m_mesh->Create(m_shader, currentSetup + 1);
+				
 				spacePressedLastFrame = true;
 			}
 		}

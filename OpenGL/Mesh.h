@@ -15,7 +15,8 @@ private:
 	vector<GLfloat> m_vertexData;
 	vector<GLuint> m_indexData;
 	glm::mat4 m_world;
-	Texture m_texture;
+	Texture m_texture1;
+	Texture m_texture2;
 	glm::vec3 m_position;
 	glm::vec3 m_rotation;
 
