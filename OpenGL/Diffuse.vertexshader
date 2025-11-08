@@ -1,0 +1,16 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+
+in vec3 vertices; // Vertex position input
+in vec3 normals;
+in vec2 texCoords;
+
+uniform mat4 WVP;
+
+out vec3 retNormal;
+out vec2 retTexCoords;
+
+void main() {
+	gl_Position = WVP * vec4(vertices, 1.0); // Pass through shader, pass the vertex position to next shader
+	retNormals = colors;
+	retTexCoords = texCoords;
+}
