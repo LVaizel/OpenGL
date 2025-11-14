@@ -111,8 +111,8 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 	m_shader->SetFloat("light.quadratic", 0.032f);
 
 	m_shader->SetVec3("light.direction", glm::normalize(glm::vec3(0.0f, 0.0f, 0.0f) - m_lightPosition));
-	m_shader->SetFloat("light.coneAngle", glm::radians(90.0f));
-	m_shader->SetFloat("light.fallOff", 0);
+	m_shader->SetFloat("light.coneAngle", glm::radians(30.0f));
+	m_shader->SetFloat("light.fallOff", 100);
 }
 
 void Mesh::BindAttributes()

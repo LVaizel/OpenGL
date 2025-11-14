@@ -48,7 +48,7 @@ void main() {
         
         float distance = length(light.position - retFragPos);
         float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
+        att *= 1 - pow(clamp(a / d, 0.0, 1.0), light.fallOff);
         vec3 ambient = diffuseTex.rgb * light.ambientColor;
         vec3 lambertian = lambertianStrength * diffuseTex.rgb * light.diffuseColor * att;
         vec3 specular = specularStrength * specularTex.rgb * light.specularColor * att;
