@@ -28,7 +28,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 #include <stb_image.h>
-
+#include <OBJ_Loader.h>
 #include "Resolution.h"	
 #include "Singleton.h"
 

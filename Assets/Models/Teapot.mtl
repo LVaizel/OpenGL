@@ -1,0 +1,20 @@
+# 3ds Max Wavefront OBJ Exporter v0.99 - (c)2007 guruware
+# File Created: 14.11.2025 07:20:00
+
+newmtl 01___TeapotMaterial
+	Ns 10.000000
+	Ka 0.580000 0.580000 0.580000
+	Kd 0.800000 0.800000 0.800000
+	Ks 0.500000 0.500000 0.500000
+	Ke 0.000000 0.000000 0.000000
+	Pr 0.2800
+	Pm 0.0000
+	Pc 0.0000
+	Pcr 0.0000
+	Ni 1.500000
+	d 1.000000
+	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	illum 2
+	map_Ka ../Textures/Flowers.jpg
+	map_Kd ../Textures/Flowers.jpg

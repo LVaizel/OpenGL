@@ -23,7 +23,7 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::Create(Shader* _shader)
+void Mesh::Create(Shader* _shader, string _file)
 {
 	m_shader = _shader;
 

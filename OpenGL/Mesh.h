@@ -49,7 +49,7 @@ public:
 	glm::vec3 GetColor() { return m_color; }
 
 	//Methods
-	void Create(Shader* _shader);
+	void Create(Shader* _shader, string _file);
 	void CalculateTransform();
 	void Render(glm::mat4 _pv);
 	void Cleanup();
