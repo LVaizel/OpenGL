@@ -102,9 +102,17 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 	m_shader->SetVec3("light.position", m_lightPosition);
 	m_shader->SetVec3("light.color", m_lightColor);
-	m_shader->SetVec3("light.ambientColor", glm::vec3(0.8f, 0.8f, 0.8f));
+	m_shader->SetVec3("light.ambientColor", glm::vec3(0.1f, 0.1f, 0.1f));
 	m_shader->SetVec3("light.diffuseColor", glm::vec3(1.0f, 1.0f, 1.0f));
 	m_shader->SetVec3("light.specularColor", { 3, 3, 3 });
+
+	m_shader->SetFloat("light.constant", 1.0f);
+	m_shader->SetFloat("light.linear", 0.09f);
+	m_shader->SetFloat("light.quadratic", 0.032f);
+
+	m_shader->SetVec3("light.direction", glm::normalize(glm::vec3(0.0f, 0.0f, 0.0f) - m_lightPosition));
+	m_shader->SetFloat("light.coneAngle", glm::radians(90.0f));
+	m_shader->SetFloat("light.fallOff", 0);
 }
 
 void Mesh::BindAttributes()

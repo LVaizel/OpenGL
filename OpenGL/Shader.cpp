@@ -64,8 +64,10 @@ void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitI
 
 void Shader::LoadAttributes()
 {
-	m_sampler1 = glGetUniformLocation(m_programID, "diffuseTexture");
-	m_sampler2 = glGetUniformLocation(m_programID, "specularTexture");
+	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
+	m_attrNormals = glGetAttribLocation(m_programID, "normals");//Get handle for normal buffer
+	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords");
+	m_attrWVP = glGetUniformLocation(m_programID, "WVP");//Get handle for WVP matrix
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _ID)
@@ -131,4 +133,5 @@ void Shader::CreateShaderProgram(const char* _vertexFilePath, const char* _fragm
 void Shader::LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath)
 {
 	CreateShaderProgram(_vertexFilePath, _fragmentFilePath);
+	LoadAttributes();
 }

@@ -19,25 +19,43 @@ struct Light {
     vec3 ambientColor;
     vec3 diffuseColor;
     vec3 specularColor;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 direction;
+    float coneAngle;
+    float fallOff;
 };
 
 uniform Material material;
 uniform Light light;
-uniform sampler2D diffuseTexture;
-uniform sampler2D specularTexture;
 
 void main() {
     vec3 lightDir = normalize(light.position - retFragPos);
-    vec3 refl = reflect(-lightDir, retNormal);
-    vec4 diffuseTex = texture(diffuseTexture, retTexCoords);
-    vec4 specularTex = texture(specularTexture, retTexCoords);
+    vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
+    vec4 specularTex = texture(material.specularTexture, retTexCoords);
 
-    float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
-    float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
+    float a = cos(light.coneAngle);
+    float d = dot(normalize(light.direction), -lightDir);
+    
+    if(a < d){
+        vec3 refl = reflect(-lightDir, retNormal);
 
-    vec3 ambient = diffuseTex.rgb * light.ambientColor;
-    vec3 lambertian = lambertianStrength * diffuseTex.rgb * light.diffuseColor;
-    vec3 specular = specularStrength * specularTex.rgb * light.specularColor;
+        float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
+        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
+        
+        float distance = length(light.position - retFragPos);
+        float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    fragColor = vec4(ambient + lambertian + specular, 1.0);
+        vec3 ambient = diffuseTex.rgb * light.ambientColor;
+        vec3 lambertian = lambertianStrength * diffuseTex.rgb * light.diffuseColor * att;
+        vec3 specular = specularStrength * specularTex.rgb * light.specularColor * att;
+        fragColor = vec4(ambient + lambertian + specular, 1.0);
+    }
+    else{
+        vec3 ambient = diffuseTex.rgb * light.ambientColor;
+        fragColor = vec4(ambient, 1.0);
+    }
 }
