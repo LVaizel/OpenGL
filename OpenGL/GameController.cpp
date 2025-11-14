@@ -7,7 +7,6 @@
 GameController::GameController()
 {
 	m_meshBoxes.clear();
-	m_meshLight = {};
 	m_shaderColor = {};
 	m_shaderDiffuse = {};
 	m_camera = { };
@@ -42,11 +41,15 @@ void GameController::RunGame()
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
-
-	m_meshLight = Mesh();
-	m_meshLight.Create(&m_shaderColor);
-	m_meshLight.SetPosition(glm::vec3(0.5f, 0, -0.5f));
-	m_meshLight.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	for (int i = 0; i < 4; i++)
+	{
+		Mesh meshLight = Mesh();
+		meshLight.Create(&m_shaderColor);
+		meshLight.SetPosition(glm::vec3(0.5f + (float)i/10.0f, 0, -0.5f));
+		meshLight.SetColor(glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f)));
+		meshLight.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+		Mesh::Lights.push_back(meshLight);
+	}
 
 	for(int i = 0; i < 10; i++)
 	{
@@ -54,8 +57,6 @@ void GameController::RunGame()
 		{
 			Mesh meshBox = Mesh();
 			meshBox.Create(&m_shaderDiffuse);
-			meshBox.SetLightColor(glm::vec3(1.0f, 1.0f, 1.0f));
-			meshBox.SetLightPosition(m_meshLight.GetPosition());
 			meshBox.SetCameraPosition(m_camera.GetPosition());
 			meshBox.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 			meshBox.SetPosition({ 0.0, -0.5f + (float)j / 10.0f, -0.2f + (float)i / 10.0f });
@@ -68,12 +69,17 @@ void GameController::RunGame()
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		for (auto& light : Mesh::Lights)
+		{
+			light.Render(m_camera.GetProjection() * m_camera.GetView());
+		}
+
 		for (auto& box : m_meshBoxes)
 		{
-			box.SetRotation(box.GetRotation() + glm::vec3(0.01f, 0.001f, 0.0f));
+			box.SetRotation(box.GetRotation() + glm::vec3(0.0f, 0.005f, 0.0f));
 			box.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-		m_meshLight.Render(m_camera.GetProjection() * m_camera.GetView());
+		
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
@@ -82,7 +88,10 @@ void GameController::RunGame()
 	{
 		box.Cleanup();
 	}
-	m_meshLight.Cleanup();
+	for (auto& light : Mesh::Lights)
+	{
+		light.Cleanup();
+	}
 	m_shaderColor.Cleanup();
 	m_shaderDiffuse.Cleanup();
 }

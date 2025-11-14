@@ -23,15 +23,13 @@ private:
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
 	glm::mat4 m_world;
-
-	//Lights
+	glm::vec3 m_color;
 	glm::vec3 m_cameraPosition;
-	glm::vec3 m_lightPosition;
-	glm::vec3 m_lightColor;
 
 	//Methods
 	void SetShaderVariables(glm::mat4 _pv);
 	void BindAttributes();
+	string Concat(string s1, int index, string s2);
 public:
 	//Constructors/Destructors
 	Mesh();
@@ -40,20 +38,24 @@ public:
 	//Getter/Setters
 	void SetRotation(glm::vec3 _rotation) { m_rotation = _rotation; }
 	glm::vec3 GetRotation() { return m_rotation; }
+
 	void SetPosition(glm::vec3 _position) { m_position = _position; }
 	glm::vec3 GetPosition() { return m_position; }
+	
 	void SetScale(glm::vec3 _scale) { m_scale = _scale; }
-	void SetLightPosition(glm::vec3 _lightPos) { m_lightPosition = _lightPos; }
-	void SetLightColor(glm::vec3 _lightColor) { m_lightColor = _lightColor; }
 	void SetCameraPosition(glm::vec3 _cameraPos) { m_cameraPosition = _cameraPos; }
+
+	void SetColor(glm::vec3 _color) { m_color = _color; }
+	glm::vec3 GetColor() { return m_color; }
 
 	//Methods
 	void Create(Shader* _shader);
 	void CalculateTransform();
 	void Render(glm::mat4 _pv);
 	void Cleanup();
-	//void Create(Shader* _shader, GLint _textureWrapperMethod);
-	//void Render(glm::mat4 _wvp, GLenum _mode);
+
+	//Members
+	static vector<Mesh> Lights;
 };
 
 #endif // MESH_H

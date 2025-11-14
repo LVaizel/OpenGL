@@ -1,6 +1,8 @@
 #include "Mesh.h"
 #include "Shader.h"
 
+vector<Mesh> Mesh::Lights;
+
 Mesh::Mesh()
 {
 	m_shader = nullptr;
@@ -14,8 +16,6 @@ Mesh::Mesh()
 	m_rotation = { 0, 0, 0 };
 	m_world = glm::mat4(1.0f);
 	m_scale = { 1, 1, 1 };
-	m_lightPosition = { 0, 0, 0 };
-	m_lightColor = { 1, 1, 1 };
 	m_cameraPosition = { 0, 0, 0 };
 }
 
@@ -100,19 +100,35 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_texture1.GetTexture());
 	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_texture2.GetTexture());
 
-	m_shader->SetVec3("light.position", m_lightPosition);
-	m_shader->SetVec3("light.color", m_lightColor);
-	m_shader->SetVec3("light.ambientColor", glm::vec3(0.1f, 0.1f, 0.1f));
-	m_shader->SetVec3("light.diffuseColor", glm::vec3(1.0f, 1.0f, 1.0f));
-	m_shader->SetVec3("light.specularColor", { 3, 3, 3 });
+	/*m_shader->SetVec3("light[0].ambientColor", glm::vec3(0.4f, 0.4f, 0.4f));
+	m_shader->SetVec3("light[0].diffuseColor", Lights[0].GetColor());
+	m_shader->SetVec3("light[0].specularColor", { 3, 3, 3 });
 
-	m_shader->SetFloat("light.constant", 1.0f);
-	m_shader->SetFloat("light.linear", 0.09f);
-	m_shader->SetFloat("light.quadratic", 0.032f);
+	m_shader->SetFloat("light[0].constant", 1.0f);
+	m_shader->SetFloat("light[0].linear", 0.09f);
+	m_shader->SetFloat("light[0].quadratic", 0.032f);
 
-	m_shader->SetVec3("light.direction", glm::normalize(glm::vec3(0.0f, 0.0f, 0.0f) - m_lightPosition));
-	m_shader->SetFloat("light.coneAngle", glm::radians(30.0f));
-	m_shader->SetFloat("light.fallOff", 100);
+	m_shader->SetVec3("light[0].position", Lights[0].GetPosition());
+	m_shader->SetVec3("light[0].direction", glm::vec3(0.0f, 0.0f, 0.0f) - Lights[0].GetPosition());
+	m_shader->SetFloat("light[0].coneAngle", glm::radians(5.0f));
+	m_shader->SetFloat("light[0].fallOff", 200);*/
+
+	for(unsigned int i = 0; i < Lights.size(); i++)
+	{
+		m_shader->SetVec3(Concat("light[",i,"].color").c_str(), Lights[i].GetColor());
+		m_shader->SetVec3(Concat("light[",i,"].ambientColor").c_str(), glm::vec3(0.1f, 0.1f, 0.1f));
+		m_shader->SetVec3(Concat("light[",i,"].diffuseColor").c_str(), Lights[i].GetColor());
+		m_shader->SetVec3(Concat("light[",i,"].specularColor").c_str(), { 3, 3, 3 });
+
+		m_shader->SetFloat(Concat("light[",i,"].constant").c_str(), 1.0f);
+		m_shader->SetFloat(Concat("light[",i,"].linear").c_str(), 0.09f);
+		m_shader->SetFloat(Concat("light[",i,"].quadratic").c_str(), 0.032f);
+
+		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
+		m_shader->SetVec3(Concat("light[",i,"].direction").c_str(), glm::normalize(glm::vec3(0.0f + i * 0.1f, 0.0f, 0.0f + i * 0.1f) - Lights[i].GetPosition()));
+		m_shader->SetFloat(Concat("light[",i,"].coneAngle").c_str(), glm::radians(5.0f));
+		m_shader->SetFloat(Concat("light[",i,"].fallOff").c_str(), 200);
+	}
 }
 
 void Mesh::BindAttributes()
@@ -130,6 +146,10 @@ void Mesh::BindAttributes()
 	//TexCoords
 	glEnableVertexAttribArray(m_shader->GetAttrTexCoords());
 	glVertexAttribPointer(m_shader->GetAttrTexCoords(), 2/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 8 * sizeof(float)/*Stride*/, (void*)(6 * sizeof(float))/*Offset*/);
+}
+string Mesh::Concat(string s1, int index, string s2)
+{
+	return s1 + to_string(index) + s2;
 }
 void Mesh::Render(glm::mat4 _pv)
 {

@@ -10,7 +10,6 @@ class GameController : public Singleton<GameController>
 {
 private:
 	vector<Mesh> m_meshBoxes;
-	Mesh m_meshLight;
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
 	Camera m_camera;
