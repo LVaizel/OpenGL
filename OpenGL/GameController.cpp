@@ -6,25 +6,16 @@
 
 GameController::GameController()
 {
-	m_mesh = nullptr;
-	m_shader = nullptr;
+	m_meshBox = {};
+	m_meshLight = {};
+	m_shaderColor = {};
+	m_shaderDiffuse = {};
 	m_camera = { };
 }
 
 GameController::~GameController()
 {
-	if (m_mesh != nullptr)
-	{
-		m_mesh->Cleanup();
-		delete m_mesh;
-		m_mesh = nullptr;
-	}
-	if (m_shader != nullptr)
-	{
-		m_shader->Cleanup();
-		delete m_shader;
-		m_shader = nullptr;
-	}
+	
 }
 
 void GameController::Initialize()
@@ -35,37 +26,43 @@ void GameController::Initialize()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 	//glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void GameController::RunGame()
 {
-	m_shader = new Shader();
-	m_shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+	m_shaderColor = Shader();
+	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
+
+	m_shaderDiffuse = Shader();
+	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
+
+
+	m_meshLight = Mesh();
+	m_meshLight.Create(&m_shaderColor);
+	m_meshLight.SetPosition(glm::vec3(0.8f, 0, 0));
+	m_meshLight.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	m_meshBox = Mesh();
+	m_meshBox.Create(&m_shaderDiffuse);
+	m_meshBox.SetLightColor(glm::vec3(0.2, 0.2, 0.2));
+	m_meshBox.SetLightPosition(m_meshLight.GetPosition());
+	m_meshBox.SetCameraPosition(m_camera.GetPosition());
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
-
-	int currentSetup = 0;
-	bool spacePressedLastFrame = false;
-	m_mesh = new Mesh();
-	m_mesh->Create(m_shader, currentSetup + 1);
 
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			if (!spacePressedLastFrame) {
-				currentSetup = (currentSetup + 1) % 3;
-				m_mesh->Create(m_shader, currentSetup + 1);
-				
-				spacePressedLastFrame = true;
-			}
-		}
-		else {
-			spacePressedLastFrame = false;
-		}
-		m_mesh->Render(m_camera.GetProjection() * m_camera.GetView());
+		m_meshBox.SetRotation(m_meshBox.GetRotation() + glm::vec3(0, 0.001f, 0));
+		m_meshBox.Render(m_camera.GetProjection() * m_camera.GetView());
+		m_meshLight.Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
 	} while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(win) == 0);
+	m_meshBox.Cleanup();
+	m_meshLight.Cleanup();
+	m_shaderColor.Cleanup();
+	m_shaderDiffuse.Cleanup();
 }

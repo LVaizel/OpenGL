@@ -4,7 +4,7 @@ Shader::Shader()
 {
 	m_programID = 0;
 	m_attrVertices = 0;
-	m_attrColors = 0;
+	m_attrNormals = 0;
 	m_attrTexCoords = 0;
 	m_sampler1 = 0;
 	m_sampler2 = 0;
@@ -24,14 +24,46 @@ void Shader::Cleanup() {
 	glDeleteProgram(m_programID);
 }
 
+void Shader::SetFloat(const char* _name, float _val)
+{
+	GLuint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1) 
+	{
+		glUniform1f(loc, _val);
+	}
+}
+
+void Shader::SetVec3(const char* _name, glm::vec3 _val)
+{
+	GLuint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1) 
+	{
+		glUniform3fv(loc, 1, &_val[0]);
+	}
+}
+
+void Shader::SetMat4(const char* _name, glm::mat4 _val)
+{
+	GLuint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1)
+	{
+		glUniformMatrix4fv(loc, 1, GL_FALSE, &_val[0][0]);
+	}
+}
+
+void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitID, int _val)
+{
+	GLuint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1)
+	{
+		glActiveTexture(_texUnit);
+		glBindTexture(GL_TEXTURE_2D, _val);
+		glUniform1i(loc, _texUnitID);
+	}
+}
+
 void Shader::LoadAttributes()
 {
-	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
-	m_attrColors = glGetAttribLocation(m_programID, "colors");//Get handle for color buffer
-	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords");
-	m_sampler1 = glGetUniformLocation(m_programID, "sampler1");
-	m_sampler2 = glGetUniformLocation(m_programID, "sampler2");
-	m_attrWVP = glGetUniformLocation(m_programID, "WVP");//Get handle for WVP matrix
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _ID)
@@ -39,7 +71,7 @@ void Shader::EvaluateShader(int _infoLength, GLuint _ID)
 	if(_infoLength > 0)
 	{
 		vector<char> errorMessage(_infoLength + 1);
-		glGetProgramInfoLog(_ID, _infoLength, NULL, &errorMessage[0]);
+		glGetShaderInfoLog(_ID, _infoLength, NULL, &errorMessage[0]);
 		if (errorMessage[0] != '\0') {
 			M_ASSERT(0, ("%s\n", &errorMessage[0]));
 		}

@@ -2,12 +2,39 @@
 
 in vec3 retNormal; // Input from vertex shader
 in vec2 retTexCoords;
+in vec3 retFragPos;
+in vec3 retViewDirection;
 
 out vec4 fragColor; // Output color
 
-uniform sampler2D sampler1;
-uniform sampler2D sampler2;
+struct Material {
+    float specularStrength
+    sampler2D diffuseTexture;
+    sampler2D specularTexture;
+};
+
+struct Light {
+    vec3 position;
+    vec3 color;
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+};
+
+uniform Material material;
+uniform Light light;
 
 void main() {
-	fragColor = mix(texture2D(sampler1, retTexCoords), texture2D(sampler2, retTexCoords), 0.3) * vec4(retNormal, 1.0f);
+    vec3 lightDir = normalize(light.position - retFragPos);
+    vec3 refl = reflect(-lightDir, retNormal);
+    vec4 tex = texture(material.diffuseTexture, retTexCoords);
+
+    float lambertianStrength = dot(lightDir, retNormal);
+    float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
+
+    vec3 ambient = tex.rgb * light.ambientColor;
+    vec3 lambertian = lambertianStrength * tex.rgb * light.diffuseColor;
+    vec3 specular = specularStrength * tex.rgb * light.specularColor;
+
+    fragColor = vec4(ambient + lambertian + specular, 1.0);
 }

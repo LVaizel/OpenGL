@@ -85,7 +85,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SimpleFragmentShader.fragmentshader" />
-    <None Include="SimpleVertexShader.vertexshader" />
+    <None Include="Color.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Color.vertexshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Diffuse.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SimpleFragmentShader.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Diffuse.vertexshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SimpleVertexShader.vertexshader">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

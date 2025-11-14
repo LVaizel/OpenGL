@@ -1,0 +1,10 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+
+in vec3 retNormal; // Input from vertex shader
+in vec2 retTexCoords;
+
+out vec4 fragColor; // Output color
+
+void main() {
+    fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
