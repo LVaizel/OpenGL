@@ -82,14 +82,6 @@ void Mesh::Create(Shader* _shader)
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
-
-	//m_indexData = {
-	//	2, 0, 3, 2, 1, 0
-	//};
-
-	//glGenBuffers(1, &m_indexBuffer);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(double), m_indexData.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::CalculateTransform()
@@ -110,7 +102,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 	m_shader->SetVec3("light.position", m_lightPosition);
 	m_shader->SetVec3("light.color", m_lightColor);
-	m_shader->SetVec3("light.ambientColor", glm::vec3(0.1f, 0.1f, 0.1f));
+	m_shader->SetVec3("light.ambientColor", glm::vec3(0.8f, 0.8f, 0.8f));
 	m_shader->SetVec3("light.diffuseColor", glm::vec3(1.0f, 1.0f, 1.0f));
 	m_shader->SetVec3("light.specularColor", { 3, 3, 3 });
 }
@@ -118,7 +110,6 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 void Mesh::BindAttributes()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
 
 	//Vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
@@ -142,7 +133,6 @@ void Mesh::Render(glm::mat4 _pv)
 	SetShaderVariables(_pv);
 	BindAttributes();
 
-	//glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexData.size()), GL_UNSIGNED_INT, (void*)0);
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 8);
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 	glDisableVertexAttribArray(m_shader->GetAttrNormals());
@@ -156,90 +146,3 @@ void Mesh::Cleanup()
 	m_texture1.Cleanup();
 	m_texture2.Cleanup();
 }
-
-//void Mesh::Create(Shader* _shader, int mode)
-//{
-//	m_shader = _shader;
-//
-//	switch (mode) 
-//	{
-//	case 1:
-//		m_texture1 = Texture();
-//		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
-//		m_texture2.Cleanup();
-//		m_texture2 = { };
-//
-//		m_vertexData = {
-//			/* Position */ /* RGBA Color */ /* Texture Coords */
-//			50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right
-//			50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
-//			-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-//			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
-//		};
-//
-//		break;
-//	case 2:
-//		m_texture1 = Texture();
-//		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
-//
-//		m_texture2 = Texture();
-//		m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
-//
-//		m_vertexData = {
-//			/* Position */ /* RGBA Color */ /* Texture Coords */
-//			50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // top-right
-//			50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // bottom-right
-//			-50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-//			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
-//		};
-//
-//		break;
-//	case 3:
-//		m_texture1 = Texture();
-//		m_texture1.LoadTexture("../Assets/Textures/Wood.jpg");
-//
-//		m_texture2 = Texture();
-//		m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
-//
-//		m_vertexData = {
-//			/* Position */ /* RGBA Color */ /* Texture Coords */
-//			50.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right
-//			50.0f, -50.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
-//			-50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-//			-50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
-//		};
-//		break;
-//	}
-//	
-//	glGenBuffers(1, &m_vertexBuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-//	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
-//
-//	m_indexData = {
-//		2, 0, 3, 2, 1, 0
-//	};
-//
-//	glGenBuffers(1, &m_indexBuffer);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(double), m_indexData.data(), GL_STATIC_DRAW);
-//}
-
-
-//void Mesh::Render(glm::mat4 _wvp, GLenum _mode)
-//{
-//	
-//	_wvp *= m_world;
-//
-//	glUseProgram(m_shader->GetProgramID());
-//	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-//
-//	glEnableVertexAttribArray(m_shader->GetAttrVertices());
-//	glVertexAttribPointer(m_shader->GetAttrVertices(), 3/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 7 * sizeof(float)/*Stride*/, (void*)0/*Offset*/);
-//
-//	glEnableVertexAttribArray(m_shader->GetAttrNormals());
-//	glVertexAttribPointer(m_shader->GetAttrNormals(), 4/*Size*/, GL_FLOAT/*Type*/, GL_FALSE/*Normalize*/, 7 * sizeof(float)/*Stride*/, (void*)(3 * sizeof(float))/*Offset*/);
-//	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]);
-//
-//	glDrawArrays(_mode, 0, m_vertexData.size() / 7);
-//	glDisableVertexAttribArray(m_shader->GetAttrVertices());
-//}

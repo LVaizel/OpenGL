@@ -8,7 +8,7 @@ in vec3 retViewDirection;
 out vec4 fragColor; // Output color
 
 struct Material {
-    float specularStrength
+    float specularStrength;
     sampler2D diffuseTexture;
     sampler2D specularTexture;
 };
@@ -23,18 +23,21 @@ struct Light {
 
 uniform Material material;
 uniform Light light;
+uniform sampler2D diffuseTexture;
+uniform sampler2D specularTexture;
 
 void main() {
     vec3 lightDir = normalize(light.position - retFragPos);
     vec3 refl = reflect(-lightDir, retNormal);
-    vec4 tex = texture(material.diffuseTexture, retTexCoords);
+    vec4 diffuseTex = texture(diffuseTexture, retTexCoords);
+    vec4 specularTex = texture(specularTexture, retTexCoords);
 
-    float lambertianStrength = dot(lightDir, retNormal);
+    float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
     float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
 
-    vec3 ambient = tex.rgb * light.ambientColor;
-    vec3 lambertian = lambertianStrength * tex.rgb * light.diffuseColor;
-    vec3 specular = specularStrength * tex.rgb * light.specularColor;
+    vec3 ambient = diffuseTex.rgb * light.ambientColor;
+    vec3 lambertian = lambertianStrength * diffuseTex.rgb * light.diffuseColor;
+    vec3 specular = specularStrength * specularTex.rgb * light.specularColor;
 
     fragColor = vec4(ambient + lambertian + specular, 1.0);
 }

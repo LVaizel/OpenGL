@@ -25,7 +25,7 @@ void GameController::Initialize()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//Ensure we can capture the escape key
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -40,12 +40,12 @@ void GameController::RunGame()
 
 	m_meshLight = Mesh();
 	m_meshLight.Create(&m_shaderColor);
-	m_meshLight.SetPosition(glm::vec3(0.8f, 0, 0));
+	m_meshLight.SetPosition(glm::vec3(1.0f, -0.5f, 0));
 	m_meshLight.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	m_meshBox = Mesh();
 	m_meshBox.Create(&m_shaderDiffuse);
-	m_meshBox.SetLightColor(glm::vec3(0.2, 0.2, 0.2));
+	m_meshBox.SetLightColor(glm::vec3(0.5f, 0.9f, 0.5f));
 	m_meshBox.SetLightPosition(m_meshLight.GetPosition());
 	m_meshBox.SetCameraPosition(m_camera.GetPosition());
 
@@ -54,7 +54,7 @@ void GameController::RunGame()
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_meshBox.SetRotation(m_meshBox.GetRotation() + glm::vec3(0, 0.001f, 0));
+		//m_meshBox.SetRotation(m_meshBox.GetRotation() + glm::vec3(0, 0.001f, 0));
 		m_meshBox.Render(m_camera.GetProjection() * m_camera.GetView());
 		m_meshLight.Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win);
