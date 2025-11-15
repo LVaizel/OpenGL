@@ -8,16 +8,22 @@ public:
 	// Constructors / Destructors Texture();
 	Texture();
 	virtual ~Texture() {}
+	
 	// Accessors
 	GLuint GetTexture() { return m_texture; }
+
 	// Methods
 	void LoadTexture(string _fileName);
 	void LoadTexture(string _fileName, GLint _wrappermethod);
 	void Cleanup();
+
 private:
 	// Members
 	int m_width;
 	int m_height; int m_channels;
 	GLuint m_texture;
+
+	//Methods
+	bool EndsWith(const std::string& str, const std::string& suffix);
 };
 #endif

@@ -16,6 +16,11 @@ void Texture::Cleanup()
     glDeleteTextures(1, &m_texture);
 }
 
+bool Texture::EndsWith(const std::string& str, const std::string& suffix)
+{
+    return (str.size() >= suffix.size()) && (str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0);
+}
+
 void Texture::LoadTexture(std::string fileName)
 {
     glGenTextures(1, &m_texture);
@@ -29,7 +34,14 @@ void Texture::LoadTexture(std::string fileName)
     stbi_set_flip_vertically_on_load(true);
     GLubyte* data = stbi_load(fileName.c_str(), &m_width, &m_height, &m_channels, 0);
     M_ASSERT(data != nullptr, "Failed to load texture");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    if(EndsWith(fileName, ".png"))
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+    else 
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    }
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);

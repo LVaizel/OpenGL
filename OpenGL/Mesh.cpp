@@ -64,7 +64,14 @@ void Mesh::Create(Shader* _shader, string _file)
 	m_texture1.LoadTexture("../Assets/Textures/" + diffuseMap);
 
 	m_texture2 = Texture();
-	m_texture2.LoadTexture("../Assets/Textures/" + specularMap);
+	if(specularMap != "")
+	{
+		m_texture2.LoadTexture("../Assets/Textures/" + specularMap);
+	}
+	else
+	{
+		m_texture2.LoadTexture("../Assets/Textures/" + diffuseMap);
+	}
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -100,8 +107,8 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
 		m_shader->SetVec3(Concat("light[",i,"].direction").c_str(), glm::normalize(glm::vec3(0.0f + i * 0.1f, 0.0f, 0.0f + i * 0.1f) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[",i,"].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[",i,"].fallOff").c_str(), 200);
+		m_shader->SetFloat(Concat("light[",i,"].coneAngle").c_str(), glm::radians(90.0f));
+		m_shader->SetFloat(Concat("light[",i,"].fallOff").c_str(), 100.0f);
 	}
 }
 

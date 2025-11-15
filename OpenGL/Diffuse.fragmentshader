@@ -34,6 +34,9 @@ uniform Material material;
 uniform Light light[NR_LIGHTS];
 
 void main() {
+    if(texture(material.diffuseTexture, retTexCoords).a < 0.001)
+        discard;
+
     vec4 finalColor = vec4(0);
     vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
     vec4 specularTex = texture(material.specularTexture, retTexCoords);
