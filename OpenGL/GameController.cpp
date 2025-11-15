@@ -49,17 +49,24 @@ void GameController::RunGame()
 
 	Mesh meshLight = Mesh();
 	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
-	meshLight.SetPosition(glm::vec3(0.8f, 0.0f, 0.0f));
+	meshLight.SetPosition(glm::vec3(1.0f, 0.0f, 0.0f));
 	meshLight.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-	meshLight.SetScale(glm::vec3(0.005f, 0.005f, 0.005f));
+	meshLight.SetScale(glm::vec3(0.01f));
 	Mesh::Lights.push_back(meshLight);
 
 	Mesh teapot = Mesh();
-	teapot.Create(&m_shaderDiffuse, "../Assets/Models/TeapotSpec.obj");
+	teapot.Create(&m_shaderDiffuse, "../Assets/Models/Teapot.obj");
 	teapot.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	teapot.SetCameraPosition(m_camera.GetPosition());
-	teapot.SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+	teapot.SetScale(glm::vec3(0.02f));
 	m_meshBoxes.push_back(teapot);
+
+	Mesh box = Mesh();
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
+	box.SetPosition(glm::vec3(-1.0f, -1.0f, -1.0f));
+	box.SetCameraPosition(m_camera.GetPosition());
+	box.SetScale(glm::vec3(0.5f));
+	m_meshBoxes.push_back(box);
 
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
@@ -70,7 +77,7 @@ void GameController::RunGame()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		for (auto& light : Mesh::Lights)
 		{
-			light.SetRotation(light.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
+			//light.SetRotation(light.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
 			light.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
