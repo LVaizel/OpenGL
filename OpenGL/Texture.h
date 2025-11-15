@@ -14,6 +14,7 @@ public:
 
 	// Methods
 	void LoadTexture(string _fileName);
+	void LoadCubeMap(vector<string> _faces);
 	void LoadTexture(string _fileName, GLint _wrappermethod);
 	void Cleanup();
 

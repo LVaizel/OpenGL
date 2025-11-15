@@ -3,6 +3,7 @@
 
 #include "StandardIncludes.h"
 #include "Camera.h"
+#include "SkyBox.h"
 #include "Mesh.h"
 #include "Shader.h"
 
@@ -13,6 +14,8 @@ private:
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
 	Shader m_shaderFont;
+	Shader m_shaderSkybox;
+	SkyBox m_skyBox;
 	Camera m_camera;
 	
 public:

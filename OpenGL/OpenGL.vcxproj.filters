@@ -48,6 +48,9 @@
     <ClCompile Include="Fonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -89,6 +92,9 @@
     <ClInclude Include="Fonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.fragmentshader">
@@ -113,6 +119,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Font.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SkyBox.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SkyBox.vertexshader">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -1,0 +1,10 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+
+in vec3 retTexCoords;
+
+uniform samplerCube skyboxTexture;
+out vec4 fragColor; // Output color
+
+void main() {
+    fragColor = texture(skyboxTexture, retTexCoords);
+}
