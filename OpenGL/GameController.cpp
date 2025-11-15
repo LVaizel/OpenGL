@@ -69,16 +69,15 @@ void GameController::RunGame()
 	m_meshBoxes.push_back(box);
 
 	Mesh plane = Mesh();
-	plane.Create(&m_shaderDiffuse, "../Assets/Models/PlaneSelf.obj");
-	plane.SetRotation(plane.GetRotation() + glm::vec3(0.0f, 0.7f, 0.0f));
-	plane.SetPosition(glm::vec3(0.6f, 0.3f, -0.6f));
+	plane.Create(&m_shaderDiffuse, "../Assets/Models/Plane.obj");
+	//plane.SetRotation(plane.GetRotation() + glm::vec3(0.0f, 0.7f, 0.0f));
+	plane.SetPosition(glm::vec3(0, 0, -1));
 	plane.SetCameraPosition(m_camera.GetPosition());
 	plane.SetScale(glm::vec3(0.3f));
 	m_meshBoxes.push_back(plane);
 
 	Mesh windowMesh = Mesh();
 	windowMesh.Create(&m_shaderDiffuse, "../Assets/Models/Window.obj");
-	windowMesh.SetRotation(plane.GetRotation());
 	windowMesh.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	windowMesh.SetCameraPosition(m_camera.GetPosition());
 	windowMesh.SetScale(glm::vec3(0.1f));
