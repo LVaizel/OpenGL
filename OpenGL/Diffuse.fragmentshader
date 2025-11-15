@@ -34,6 +34,10 @@ uniform Material material;
 uniform Light light[NR_LIGHTS];
 
 void main() {
+    vec3 norm = normalize(retNormal);
+    if (!gl_FrontFacing) {
+        norm = -norm; // flip normal for back faces
+    }
     if(texture(material.diffuseTexture, retTexCoords).a < 0.001)
         discard;
 
@@ -44,9 +48,9 @@ void main() {
     for(int i = 0; i < NR_LIGHTS; i++){
         vec3 lightDir = normalize(light[i].position - retFragPos);
         
-        vec3 refl = reflect(-lightDir, retNormal);
+        vec3 refl = reflect(-lightDir, norm);
 
-        float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
+        float lambertianStrength = max(dot(lightDir, norm), 0.0);
         float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
 
         vec3 ambient = diffuseTex.rgb * light[i].ambientColor / NR_LIGHTS;

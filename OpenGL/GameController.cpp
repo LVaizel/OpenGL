@@ -26,7 +26,9 @@ void GameController::Initialize()
 	
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 	
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -54,36 +56,12 @@ void GameController::RunGame()
 	meshLight.SetScale(glm::vec3(0.01f));
 	Mesh::Lights.push_back(meshLight);
 
-	Mesh teapot = Mesh();
-	teapot.Create(&m_shaderDiffuse, "../Assets/Models/Teapot.obj");
-	teapot.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	teapot.SetCameraPosition(m_camera.GetPosition());
-	teapot.SetScale(glm::vec3(0.02f));
-	m_meshBoxes.push_back(teapot);
-
 	Mesh box = Mesh();
 	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
 	box.SetPosition(glm::vec3(-1.0f, -1.0f, -1.0f));
 	box.SetCameraPosition(m_camera.GetPosition());
 	box.SetScale(glm::vec3(0.5f));
 	m_meshBoxes.push_back(box);
-
-	Mesh plane = Mesh();
-	plane.Create(&m_shaderDiffuse, "../Assets/Models/Plane.obj");
-	//plane.SetRotation(plane.GetRotation() + glm::vec3(0.0f, 0.7f, 0.0f));
-	//plane.SetPosition(glm::vec3(0.6f, 0.3f, -0.6f));
-	plane.SetPosition(glm::vec3(0, 0, -1));
-	plane.SetCameraPosition(m_camera.GetPosition());
-	plane.SetScale(glm::vec3(0.3f));
-	m_meshBoxes.push_back(plane);
-
-	Mesh windowMesh = Mesh();
-	windowMesh.Create(&m_shaderDiffuse, "../Assets/Models/Window.obj");
-	windowMesh.SetRotation(plane.GetRotation());
-	windowMesh.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	windowMesh.SetCameraPosition(m_camera.GetPosition());
-	windowMesh.SetScale(glm::vec3(0.1f));
-	m_meshBoxes.push_back(windowMesh);
 
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
