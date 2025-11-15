@@ -35,34 +35,23 @@ uniform Light light[NR_LIGHTS];
 
 void main() {
     vec4 finalColor = vec4(0);
+    vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
+    vec4 specularTex = texture(material.specularTexture, retTexCoords);
+    
     for(int i = 0; i < NR_LIGHTS; i++){
         vec3 lightDir = normalize(light[i].position - retFragPos);
-        vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
-        vec4 specularTex = texture(material.specularTexture, retTexCoords);
+        
+        vec3 refl = reflect(-lightDir, retNormal);
 
-        float a = cos(light[i].coneAngle);
-        float d = dot(normalize(light[i].direction), -lightDir);
-    
-        if(a < d){
-            vec3 refl = reflect(-lightDir, retNormal);
+        float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
+        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
 
-            float lambertianStrength = max(dot(lightDir, retNormal), 0.0);
-            float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
-
-            float distance = length(light[i].position - retFragPos);
-            float att = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * (distance * distance));
-            att *= 1 - pow(clamp(a / d, 0.0, 1.0), light[i].fallOff);
-
-            vec3 ambient = diffuseTex.rgb * light[i].ambientColor;
-            vec3 lambertian = lambertianStrength * diffuseTex.rgb * light[i].diffuseColor * att;
-            vec3 specular = specularStrength * specularTex.rgb * light[i].specularColor * att;
+        vec3 ambient = diffuseTex.rgb * light[i].ambientColor / NR_LIGHTS;
+        vec3 lambertian = lambertianStrength * diffuseTex.rgb * light[i].diffuseColor;
+        vec3 specular = specularStrength * specularTex.rgb * light[i].specularColor;
             
-            finalColor += vec4(ambient + lambertian + specular, 1.0);
-        }
-        else{
-            vec3 ambient = diffuseTex.rgb * light[i].ambientColor / NR_LIGHTS;
-            finalColor += vec4(ambient, 1.0);
-        }
+        finalColor += vec4(ambient + lambertian + specular, 1.0);
     }
+    
     fragColor = finalColor;
 }

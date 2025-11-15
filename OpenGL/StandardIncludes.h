@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 
 //Windows Specific Defines
 #ifdef _WIN32
@@ -28,9 +29,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 #include <stb_image.h>
-#include <OBJ_Loader.h>
 #include "Resolution.h"	
 #include "Singleton.h"
+
+//Font includes
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 using namespace std;
 

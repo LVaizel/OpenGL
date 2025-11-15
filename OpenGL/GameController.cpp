@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "ToolWindow.h"
+#include "Fonts.h"
 
 GameController::GameController()
 {
@@ -27,7 +28,9 @@ void GameController::Initialize()
 	
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	srand(time(0));
 
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
@@ -41,29 +44,25 @@ void GameController::RunGame()
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
-	for (int i = 0; i < 4; i++)
-	{
-		Mesh meshLight = Mesh();
-		meshLight.Create(&m_shaderColor);
-		meshLight.SetPosition(glm::vec3(0.5f + (float)i/10.0f, 0, -0.5f));
-		meshLight.SetColor(glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f)));
-		meshLight.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-		Mesh::Lights.push_back(meshLight);
-	}
+	m_shaderFont = Shader();
+	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 
-	for(int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++) 
-		{
-			Mesh meshBox = Mesh();
-			meshBox.Create(&m_shaderDiffuse);
-			meshBox.SetCameraPosition(m_camera.GetPosition());
-			meshBox.SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-			meshBox.SetPosition({ 0.0, -0.5f + (float)j / 10.0f, -0.2f + (float)i / 10.0f });
-			m_meshBoxes.push_back(meshBox);
-		}
-	}
+	Mesh meshLight = Mesh();
+	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
+	meshLight.SetPosition(glm::vec3(0.8f, 0.0f, 0.0f));
+	meshLight.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	meshLight.SetScale(glm::vec3(0.005f, 0.005f, 0.005f));
+	Mesh::Lights.push_back(meshLight);
 
+	Mesh teapot = Mesh();
+	teapot.Create(&m_shaderDiffuse, "../Assets/Models/TeapotSpec.obj");
+	teapot.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	teapot.SetCameraPosition(m_camera.GetPosition());
+	teapot.SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+	m_meshBoxes.push_back(teapot);
+
+	Fonts f = Fonts();
+	f.Create(&m_shaderFont, "arial.ttf", 48);
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 
 	//View changes on pressing spacebar
@@ -71,15 +70,16 @@ void GameController::RunGame()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		for (auto& light : Mesh::Lights)
 		{
+			light.SetRotation(light.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
 			light.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
 		for (auto& box : m_meshBoxes)
 		{
-			box.SetRotation(box.GetRotation() + glm::vec3(0.0f, 0.005f, 0.0f));
+			box.SetRotation(box.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
 			box.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-		
+		f.RenderText("OpenGL Game Controller - Press ESC to Exit", 10, 500, 0.5f, glm::vec3(1, 0, 0));
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 

@@ -12,7 +12,9 @@ private:
 	vector<Mesh> m_meshBoxes;
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
+	Shader m_shaderFont;
 	Camera m_camera;
+	
 public:
 	GameController();
 	virtual ~GameController();
