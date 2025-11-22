@@ -5,6 +5,8 @@ Shader::Shader()
 	m_programID = 0;
 	m_attrVertices = 0;
 	m_attrNormals = 0;
+	m_attrTangents = 0;
+	m_attrBitangents = 0;
 	m_attrTexCoords = 0;
 	m_sampler1 = 0;
 	m_sampler2 = 0;
@@ -75,6 +77,8 @@ void Shader::LoadAttributes()
 {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
 	m_attrNormals = glGetAttribLocation(m_programID, "normals");//Get handle for normal buffer
+	m_attrTangents = glGetAttribLocation(m_programID, "tangents");//Get handle for tangent buffer
+	m_attrBitangents = glGetAttribLocation(m_programID, "bitangents");//Get handle for bitangent buffer
 	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords");
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP");//Get handle for WVP matrix
 }

@@ -56,24 +56,17 @@ void GameController::RunGame()
 #pragma region CreateMeshes
 	Mesh meshLight = Mesh();
 	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
-	meshLight.SetPosition(glm::vec3(1.5f, 0.0f, 1.0f));
+	meshLight.SetPosition(glm::vec3(0, 0.8f, 1.0f));
 	meshLight.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 	meshLight.SetScale(glm::vec3(0.01f));
 	Mesh::Lights.push_back(meshLight);
 
-	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
-	box.SetPosition(glm::vec3(0, 0, 0));
-	box.SetCameraPosition(m_camera.GetPosition());
-	box.SetScale(glm::vec3(0.25));
-	m_meshBoxes.push_back(box);
-
-	Mesh wall = Mesh();
-	wall.Create(&m_shaderDiffuse, "../Assets/Models/BrickWall.obj");
-	wall.SetPosition(glm::vec3(0, -4, -5));
-	wall.SetCameraPosition(m_camera.GetPosition());
-	wall.SetScale(glm::vec3(0.3));
-	m_meshBoxes.push_back(wall);
+	Mesh fighter = Mesh();
+	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
+	fighter.SetPosition(glm::vec3(0, 0, 0));
+	fighter.SetCameraPosition(m_camera.GetPosition());
+	fighter.SetScale(glm::vec3(0.002));
+	m_meshBoxes.push_back(fighter);
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
@@ -86,13 +79,13 @@ void GameController::RunGame()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		for (auto& light : Mesh::Lights)
 		{
-			light.SetRotation(light.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
+			light.SetRotation(light.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));
 			light.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
 		for (auto& box : m_meshBoxes)
 		{
-			box.SetRotation(box.GetRotation() + glm::vec3(0.0f, 0.0005f, 0.0f));
+			box.SetRotation(box.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));
 			box.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		glfwSwapBuffers(win);

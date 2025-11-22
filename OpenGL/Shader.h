@@ -8,6 +8,8 @@ class Shader
 private:
 	GLuint m_programID;
 	GLuint m_attrNormals;
+	GLuint m_attrTangents;
+	GLuint m_attrBitangents;
 	GLuint m_attrVertices;
 	GLuint m_attrTexCoords;
 	GLuint m_sampler1;
@@ -30,6 +32,8 @@ public:
 	//Accessors
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrNormals() { return m_attrNormals; }
+	GLuint GetAttrTangents() { return m_attrTangents; }
+	GLuint GetAttrBitangents() { return m_attrBitangents; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetSampler1() { return m_sampler1; }

@@ -3,7 +3,7 @@
 
 #include "StandardIncludes.h"
 #include "Texture.h"
-
+#include <OBJ_Loader.h>
 class Shader;
 
 class Mesh
@@ -33,6 +33,7 @@ private:
 	void BindAttributes();
 	string Concat(string s1, int index, string s2);
 	string RemoveFolder(string _fullPath);
+	void CalculateTangents(vector<objl::Vertex> _vertices, objl::Vector3& _tangent, objl::Vector3& _bitangent);
 public:
 	//Constructors/Destructors
 	Mesh();
