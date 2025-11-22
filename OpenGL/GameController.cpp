@@ -26,8 +26,8 @@ void GameController::Initialize()
 	
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 	
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
