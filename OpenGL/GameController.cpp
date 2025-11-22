@@ -15,7 +15,7 @@ GameController::GameController()
 
 GameController::~GameController()
 {
-	
+
 }
 
 void GameController::Initialize()
@@ -23,9 +23,9 @@ void GameController::Initialize()
 	GLFWwindow* window = WindowController::GetInstance().GetWindow(); // Creates Window
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW.");//Init GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//Ensure we can capture the escape key
-	
+
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
-	
+
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
 
@@ -37,8 +37,8 @@ void GameController::Initialize()
 
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 
-	//glGenVertexArrays(1, &vao);
-	//glBindVertexArray(vao);
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 }
 
 void GameController::RunGame()
@@ -58,20 +58,20 @@ void GameController::RunGame()
 #pragma endregion
 #pragma region CreateMeshes
 	Mesh meshLight = Mesh();
-	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
+	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj", 1);
 	meshLight.SetPosition(glm::vec3(0, 0.8f, 1.0f));
 	meshLight.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 	meshLight.SetScale(glm::vec3(0.01f));
 	Mesh::Lights.push_back(meshLight);
 
-	for (int i = 0; i < 400; i++) {
-		Mesh box = Mesh();
-		box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
-		box.SetPosition(glm::vec3(0, 0, 0));
-		box.SetCameraPosition(m_camera.GetPosition());
-		box.SetScale(glm::vec3(0.2));
-		m_meshBoxes.push_back(box);
-	}
+
+	Mesh box = Mesh();
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 1000);
+	box.SetPosition(glm::vec3(0, 0, 0));
+	box.SetCameraPosition(m_camera.GetPosition());
+	box.SetScale(glm::vec3(0.08));
+	m_meshBoxes.push_back(box);
+
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
@@ -88,7 +88,7 @@ void GameController::RunGame()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		currentTime = glfwGetTime();
 		fps++;
-		if(currentTime - lastTime >= 1.0)
+		if (currentTime - lastTime >= 1.0)
 		{
 			fpsS = "FPS: " + to_string(fps);
 			fps = 0;

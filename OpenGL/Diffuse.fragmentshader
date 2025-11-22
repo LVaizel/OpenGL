@@ -73,4 +73,5 @@ void main() {
     }
 
     fragColor = vec4(finalColor, diffuseTex.a);
+    //fragColor = vec4(1, 0, 0, 1);
 }

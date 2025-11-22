@@ -13,12 +13,20 @@ private:
 	Shader* m_shader;
 	GLuint m_vertexBuffer;
 	GLuint m_indexBuffer;
+	GLuint m_instanceBuffer;
+
 	Texture m_textureDiffuse;
 	Texture m_textureSpecular;
 	Texture m_textureNormal;
+	
 	vector<GLfloat> m_vertexData;
 	vector<GLuint> m_indexData;
+	vector<GLfloat> m_instanceData;
 	bool m_enableNormalMap;
+
+	int m_instanceCount;
+	bool m_enableInstancing;
+	int m_elementSize;
 
 	//Transform
 	glm::vec3 m_position;
@@ -53,7 +61,7 @@ public:
 	glm::vec3 GetColor() { return m_color; }
 
 	//Methods
-	void Create(Shader* _shader, string _file);
+	void Create(Shader* _shader, string _file, int _instanceCount = 1);
 	void CalculateTransform();
 	void Render(glm::mat4 _pv);
 	void Cleanup();
