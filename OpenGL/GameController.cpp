@@ -36,6 +36,9 @@ void GameController::Initialize()
 	srand(time(0));
 
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+
+	//glGenVertexArrays(1, &vao);
+	//glBindVertexArray(vao);
 }
 
 void GameController::RunGame()
@@ -61,22 +64,38 @@ void GameController::RunGame()
 	meshLight.SetScale(glm::vec3(0.01f));
 	Mesh::Lights.push_back(meshLight);
 
-	Mesh fighter = Mesh();
-	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
-	fighter.SetPosition(glm::vec3(0, 0, 0));
-	fighter.SetCameraPosition(m_camera.GetPosition());
-	fighter.SetScale(glm::vec3(0.002));
-	m_meshBoxes.push_back(fighter);
+	for (int i = 0; i < 400; i++) {
+		Mesh box = Mesh();
+		box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
+		box.SetPosition(glm::vec3(0, 0, 0));
+		box.SetCameraPosition(m_camera.GetPosition());
+		box.SetScale(glm::vec3(0.2));
+		m_meshBoxes.push_back(box);
+	}
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
 
 #pragma region Render
+	double lastTime = glfwGetTime();
+	double currentTime = 0;
+	int fps = 0;
+	string fpsS = "0";
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		currentTime = glfwGetTime();
+		fps++;
+		if(currentTime - lastTime >= 1.0)
+		{
+			fpsS = "FPS: " + to_string(fps);
+			fps = 0;
+			lastTime += 1;
+		}
+		f.RenderText(fpsS, 100.0f, 100.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+		f.RenderText("BoxCount: " + to_string(m_meshBoxes.size()), 100.0f, 150.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 		for (auto& light : Mesh::Lights)
 		{
 			light.SetRotation(light.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));

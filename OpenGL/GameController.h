@@ -17,7 +17,7 @@ private:
 	Shader m_shaderSkybox;
 	SkyBox m_skyBox;
 	Camera m_camera;
-	
+	GLuint vao;
 public:
 	GameController();
 	virtual ~GameController();
