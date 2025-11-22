@@ -43,6 +43,7 @@ public:
 	void SetVec3(const char* _name, glm::vec3 _val);
 	void SetMat4(const char* _name, glm::mat4 _val);
 	void SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitID, int _val);
+	void SetInt(const char* _name, int _val);
 };
 #endif // SHADER_H
 

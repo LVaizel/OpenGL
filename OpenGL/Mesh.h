@@ -13,10 +13,12 @@ private:
 	Shader* m_shader;
 	GLuint m_vertexBuffer;
 	GLuint m_indexBuffer;
-	Texture m_texture1;
-	Texture m_texture2;
+	Texture m_textureDiffuse;
+	Texture m_textureSpecular;
+	Texture m_textureNormal;
 	vector<GLfloat> m_vertexData;
 	vector<GLuint> m_indexData;
+	bool m_enableNormalMap;
 
 	//Transform
 	glm::vec3 m_position;
@@ -30,6 +32,7 @@ private:
 	void SetShaderVariables(glm::mat4 _pv);
 	void BindAttributes();
 	string Concat(string s1, int index, string s2);
+	string RemoveFolder(string _fullPath);
 public:
 	//Constructors/Destructors
 	Mesh();

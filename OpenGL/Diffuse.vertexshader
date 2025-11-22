@@ -12,6 +12,7 @@ out vec3 retNormal;
 out vec2 retTexCoords;
 out vec3 retFragPos;
 out vec3 retViewDirection;
+out mat4 retWorld;
 
 void main() {
 	gl_Position = WVP * vec4(vertices, 1.0); // Pass through shader, pass the vertex position to next shader
@@ -19,4 +20,5 @@ void main() {
 	retTexCoords = texCoords;
 	retFragPos = vec3(World * vec4(vertices, 1.0));
 	retViewDirection = normalize(CameraPosition - retFragPos);
+	retWorld = transpose(inverse(World));
 }

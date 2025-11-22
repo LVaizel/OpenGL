@@ -5,6 +5,7 @@ in vec3 retNormal; // Input from vertex shader
 in vec2 retTexCoords;
 in vec3 retFragPos;
 in vec3 retViewDirection;
+in mat4 retWorld;
 
 out vec4 fragColor; // Output color
 
@@ -12,6 +13,7 @@ struct Material {
     float specularStrength;
     sampler2D diffuseTexture;
     sampler2D specularTexture;
+    sampler2D normalTexture;
 };
 
 struct Light {
@@ -32,18 +34,27 @@ struct Light {
 
 uniform Material material;
 uniform Light light[NR_LIGHTS];
+uniform bool EnableNormalMap;
 
 void main() {
     vec3 norm = normalize(retNormal);
+    if(EnableNormalMap) {
+        norm = texture(material.normalTexture, retTexCoords).rgb;
+        norm = normalize(norm * 2.0 - 1.0);
+        norm = normalize(mat3(retWorld) * norm);
+    }
+
     if (!gl_FrontFacing) {
         norm = -norm; // flip normal for back faces
     }
-    if(texture(material.diffuseTexture, retTexCoords).a < 0.001)
+
+    vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
+    if(diffuseTex.a < 0.00001)
         discard;
 
     vec3 finalColor = vec3(0);
-    vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
     vec4 specularTex = texture(material.specularTexture, retTexCoords);
+
     
     for(int i = 0; i < NR_LIGHTS; i++){
         vec3 lightDir = normalize(light[i].position - retFragPos);

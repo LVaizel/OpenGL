@@ -62,6 +62,15 @@ void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitI
 	}
 }
 
+void Shader::SetInt(const char* _name, int _val)
+{
+	GLuint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1)
+	{
+		glUniform1i(loc, _val);
+	}
+}
+
 void Shader::LoadAttributes()
 {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices");//Get handle for vertex buffer
