@@ -36,7 +36,7 @@ void GameController::Initialize()
 
 	srand(time(0));
 
-	glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+	glClearColor(0, 0, 0, 1);
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
