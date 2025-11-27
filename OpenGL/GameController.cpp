@@ -5,11 +5,13 @@
 #include "ToolWindow.h"
 #include "Fonts.h"
 
+
 GameController::GameController()
 {
 	m_meshBoxes.clear();
 	m_shaderColor = {};
 	m_shaderDiffuse = {};
+	m_shaderPostProcess = {};
 	m_camera = { };
 }
 
@@ -23,8 +25,7 @@ void GameController::Initialize()
 	GLFWwindow* window = WindowController::GetInstance().GetWindow(); // Creates Window
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW.");//Init GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//Ensure we can capture the escape key
-
-	m_camera = Camera(WindowController::GetInstance().GetResolution());
+	glClearColor(0, 0, 0, 1);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -39,6 +40,10 @@ void GameController::Initialize()
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
+
+	Resolution res = WindowController::GetInstance().GetResolution();
+	glViewport(0, 0, res.m_width, res.m_height);
+	m_camera = Camera(res);
 }
 
 void GameController::RunGame()
@@ -55,6 +60,9 @@ void GameController::RunGame()
 
 	m_shaderSkybox = Shader();
 	m_shaderSkybox.LoadShaders("SkyBox.vertexshader", "SkyBox.fragmentshader");
+
+	m_shaderPostProcess = Shader();
+	m_shaderPostProcess.LoadShaders("PostProcessor.vertexshader", "PostProcessor.fragmentshader");
 #pragma endregion
 #pragma region CreateMeshes
 	Mesh meshLight = Mesh();
@@ -66,15 +74,18 @@ void GameController::RunGame()
 
 
 	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 1000);
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 10);
 	box.SetPosition(glm::vec3(0, 0, 0));
 	box.SetCameraPosition(m_camera.GetPosition());
-	box.SetScale(glm::vec3(0.08));
+	box.SetScale(glm::vec3(0.1));
 	m_meshBoxes.push_back(box);
 
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
+
+	m_postProcessor = PostProcessor();
+	m_postProcessor.Create(&m_shaderPostProcess);
 
 #pragma region Render
 	double lastTime = glfwGetTime();
@@ -86,6 +97,9 @@ void GameController::RunGame()
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		m_postProcessor.Start();
+
 		currentTime = glfwGetTime();
 		fps++;
 		if (currentTime - lastTime >= 1.0)
@@ -94,8 +108,7 @@ void GameController::RunGame()
 			fps = 0;
 			lastTime += 1;
 		}
-		f.RenderText(fpsS, 100.0f, 100.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-		f.RenderText("BoxCount: " + to_string(m_meshBoxes.size()), 100.0f, 150.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		for (auto& light : Mesh::Lights)
 		{
 			light.SetRotation(light.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));
@@ -107,6 +120,10 @@ void GameController::RunGame()
 			box.SetRotation(box.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));
 			box.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+		m_postProcessor.End();
+
+		f.RenderText(fpsS, 100.0f, 100.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 
@@ -123,9 +140,13 @@ void GameController::RunGame()
 		light.Cleanup();
 	}
 
+	f.Cleanup();
+	m_postProcessor.Cleanup();
+
 	m_shaderColor.Cleanup();
 	m_shaderDiffuse.Cleanup();
 	m_shaderSkybox.Cleanup();
 	m_shaderFont.Cleanup();
+	m_shaderPostProcess.Cleanup();
 #pragma endregion
 }
