@@ -87,7 +87,7 @@ void GameController::RunGame()
 
 	Mesh asteroid = Mesh();
 	asteroid.Create(&m_shaderDiffuse, "../Assets/Models/Asteroid.obj", 50);
-	asteroid.SetPosition(fighter.GetPosition());
+	asteroid.SetPosition(m_camera.GetPosition());
 	asteroid.SetScale(glm::vec3(0.01));
 
 	m_skyBox = SkyBox();
@@ -261,7 +261,8 @@ void GameController::RunGame()
 				fighter.SetRotation(glm::vec3(0, 0, 0));
 				lastState = renderState;
 			}
-
+			m_skyBox.Render(m_camera.GetProjection()* mat4);
+			m_camera.Rotate();
 			asteroid.Render(m_camera.GetProjection()* m_camera.GetView());
 			//m_camera.Rotate();
 		}

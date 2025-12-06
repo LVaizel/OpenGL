@@ -126,27 +126,8 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		srand(glfwGetTime());
 		for (unsigned int i = 0; i < m_instanceCount; i++)
 		{
-			glm::vec3 randomDir(
-				(rand() / (float)RAND_MAX) * 5.0f - 1.0f,
-				(rand() / (float)RAND_MAX) * 2.0f - 1.0f,
-				(rand() / (float)RAND_MAX) * 4.0f - 1.0f
-			);
-
-			// avoid degeneracies
-			if (glm::length(randomDir) < 0.0001f)
-				randomDir = glm::vec3(1, 0, 0);
-
-			randomDir = glm::normalize(randomDir);
-
-			// random radius between 0.1 and 0.2
-			float rMin = 0.1f;
-			float rMax = 0.2f;
-			float radius = rMin + (rand() / (float)RAND_MAX) * (rMax - rMin);
-
-			glm::vec3 instancePos = m_position + randomDir * radius;
-
-			
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), instancePos);
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-400 + rand() % 800, -100 + rand() % 200, -400 + rand() % 400));
 
 			for (int x = 0; x < 4; x++)
 				for (int y = 0; y < 4; y++)
