@@ -86,8 +86,9 @@ void GameController::RunGame()
 	fish.SetScale(glm::vec3(0.02f));
 
 	Mesh asteroid = Mesh();
-	asteroid.Create(&m_shaderDiffuse, "../Assets/Models/Asteroid.obj", 15);
-	asteroid.SetPosition(glm::vec3(0));
+	asteroid.Create(&m_shaderDiffuse, "../Assets/Models/Asteroid.obj", 50);
+	asteroid.SetPosition(fighter.GetPosition());
+	asteroid.SetScale(glm::vec3(0.01));
 
 	m_skyBox = SkyBox();
 	m_skyBox.Create(&m_shaderSkybox, "../Assets/Models/SkyBox.obj", {
@@ -256,12 +257,13 @@ void GameController::RunGame()
 				activeModel = &fighter;
 				activeModelName = "Fighter";
 				lightRef.SetPosition(glm::vec3(-0.842649102, 0.247713193, 0.407824963));
+				fighter.SetPosition(glm::vec3(0, 0, 0));
+				fighter.SetRotation(glm::vec3(0, 0, 0));
 				lastState = renderState;
 			}
 
-			fighter.Render(m_camera.GetProjection()* m_camera.GetView());
-			m_skyBox.Render(m_camera.GetProjection() * m_camera.GetView());
-			m_camera.Rotate();
+			asteroid.Render(m_camera.GetProjection()* m_camera.GetView());
+			//m_camera.Rotate();
 		}
 
 		double mouseX, mouseY;

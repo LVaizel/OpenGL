@@ -33,12 +33,17 @@ Camera::Camera(Resolution _screenResolution)
 void Camera::Rotate()
 {
 	m_angle += 0.01f;
-	m_lookAt.x = cos(glm::radians(m_angle)) * 100;
+	float rad = glm::radians(m_angle);
+	m_lookAt = glm::vec3(
+		cos(rad),
+		0.0f,
+		sin(rad)
+	);
 
 	m_view = glm::lookAt(
 		m_position,
 		m_lookAt,
-		glm::vec3(0, 1, 0)  //Head is up (set to 0, 1, 0 to look upside-down)
+		glm::vec3(0, 1, 0)
 	);
 }
 
