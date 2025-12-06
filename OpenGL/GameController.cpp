@@ -91,12 +91,12 @@ void GameController::RunGame()
 
 	m_skyBox = SkyBox();
 	m_skyBox.Create(&m_shaderSkybox, "../Assets/Models/SkyBox.obj", {
-		"../Assets/Textures/right.jpg",
-		"../Assets/Textures/left.jpg",
-		"../Assets/Textures/top.jpg",
-		"../Assets/Textures/bottom.jpg",
-		"../Assets/Textures/front.jpg",
-		"../Assets/Textures/back.jpg"
+		"../Assets/Textures/Skybox/right.jpg",
+		"../Assets/Textures/Skybox/left.jpg",
+		"../Assets/Textures/Skybox/top.jpg",
+		"../Assets/Textures/Skybox/bottom.jpg",
+		"../Assets/Textures/Skybox/front.jpg",
+		"../Assets/Textures/Skybox/back.jpg"
 		});
 
 #pragma endregion
