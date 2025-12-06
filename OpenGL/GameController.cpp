@@ -66,20 +66,17 @@ void GameController::RunGame()
 #pragma endregion
 #pragma region CreateMeshes
 	Mesh meshLight = Mesh();
-	meshLight.Create(&m_shaderColor, "../Assets/Models/Teapot.obj", 1);
-	meshLight.SetPosition(glm::vec3(0, 0.8f, 1.0f));
-	meshLight.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-	meshLight.SetScale(glm::vec3(0.01f));
+	meshLight.Create(&m_shaderColor, "../Assets/Models/Sphere.obj", 1);
+	meshLight.SetPosition(glm::vec3(0.0f, 0.0f, 1.8f));
+	meshLight.SetColor(glm::vec3(2));
+	meshLight.SetScale(glm::vec3(0.007f));
 	Mesh::Lights.push_back(meshLight);
 
-
-	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 10);
-	box.SetPosition(glm::vec3(0, 0, 0));
-	box.SetCameraPosition(m_camera.GetPosition());
-	box.SetScale(glm::vec3(0.1));
-	m_meshBoxes.push_back(box);
-
+	Mesh fighter = Mesh();
+	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
+	fighter.SetPosition(glm::vec3(0, 0, 0));
+	fighter.SetScale(glm::vec3(0.0008f));
+	m_meshBoxes.push_back(fighter);
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
@@ -98,7 +95,7 @@ void GameController::RunGame()
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_postProcessor.Start();
+		//m_postProcessor.Start();
 
 		currentTime = glfwGetTime();
 		fps++;
@@ -120,7 +117,7 @@ void GameController::RunGame()
 			box.SetRotation(box.GetRotation() + glm::vec3(0.0005f, 0, 0.0f));
 			box.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-		m_postProcessor.End();
+		//m_postProcessor.End();
 
 		f.RenderText(fpsS, 100.0f, 100.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 
