@@ -6,6 +6,11 @@ in vec2 retTexCoords;
 out vec4 fragColor; // Output color
 
 uniform sampler2D screenTexture;
+uniform float time = 0;
+uniform float frequency = 0;
+uniform float amplitude = 0;
+uniform int tint = 0;
+
 void main() {
 	vec2 offsets[9] = vec2[](
 		vec2(-offset,  offset), // top-left
@@ -19,17 +24,20 @@ void main() {
 		vec2( offset, -offset)  // bottom-right    
 	);
 
-	//Sharpen Kernel
 	float kernel[9] = float[](
-		-1.0, -1.0, -1.0,
-		-1.0,  8.0, -1.0,
-		-1.0, -1.0, -1.0
+		0, 0, 0,
+		0, 1, 0,
+		0, 0, 0
 	);
 
+    vec2 newPos = retTexCoords;
+
+    newPos.x += sin((newPos.x * frequency) + time) * amplitude;
+	newPos.y += cos((newPos.x * frequency) + time) * amplitude;
 	vec3 sampleTex[9];
 	for(int i = 0; i < 9; i++)
 	{
-		sampleTex[i] = vec3(texture(screenTexture, retTexCoords.st + offsets[i]));
+		sampleTex[i] = vec3(texture(screenTexture, newPos.st + offsets[i]));
 	}
 
 	vec3 color = vec3(0.0);
@@ -37,11 +45,11 @@ void main() {
 	for(int i = 0; i < 9; i++)
 		color += sampleTex[i] * kernel[i];
 
-	//Grayscale effect
-	//color = vec3(dot(color, vec3(0.2126, 0.7152, 0.0722))); // corrected typo
-	
-	//Inverted effect
-	//color = 1 - color;
+	if(tint > 0)
+	{
+		color.r = color.r / 2;
+		color.g = color.g / 2;
+	}
 
 	fragColor = vec4(color, 1.0);
 }

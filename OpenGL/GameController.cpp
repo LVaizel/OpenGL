@@ -69,7 +69,7 @@ void GameController::RunGame()
 	Mesh meshLight = Mesh();
 	meshLight.Create(&m_shaderColor, "../Assets/Models/Sphere.obj", 1);
 	meshLight.SetPosition(glm::vec3(0.0f, 0.0f, 0.8f));
-	meshLight.SetColor(glm::vec3(0.8));
+	meshLight.SetColor(glm::vec3(2));
 	meshLight.SetScale(glm::vec3(0.08f));
 	Mesh::Lights.push_back(meshLight);
 	Mesh& lightRef = Mesh::Lights.back();
@@ -78,8 +78,27 @@ void GameController::RunGame()
 	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
 	fighter.SetPosition(glm::vec3(0, 0, 0));
 	fighter.SetScale(glm::vec3(0.0008f));
-	m_meshBoxes.push_back(fighter);
-	Mesh& fighterRef = m_meshBoxes.back();
+
+	Mesh fish = Mesh();
+	fish.Create(&m_shaderDiffuse, "../Assets/Models/Fish.obj");
+	fish.SetPosition(glm::vec3(0));
+	fish.SetRotation({ 0, glm::radians(180.0f), 0 });
+	fish.SetScale(glm::vec3(0.02f));
+
+	Mesh asteroid = Mesh();
+	asteroid.Create(&m_shaderDiffuse, "../Assets/Models/Asteroid.obj", 15);
+	asteroid.SetPosition(glm::vec3(0));
+
+	m_skyBox = SkyBox();
+	m_skyBox.Create(&m_shaderSkybox, "../Assets/Textures/SkyBox.obj", {
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg"
+		});
+
 #pragma endregion
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 48);
@@ -88,10 +107,10 @@ void GameController::RunGame()
 	m_postProcessor.Create(&m_shaderPostProcess);
 
 #pragma region Render
-	double lastTime = glfwGetTime();
-	double currentTime = 0;
+	int frameCount = 0;
+	int tFrame = 0;
 	int fps = 0;
-	string fpsS = "0";
+	double lastTime = glfwGetTime();
 	
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	stringstream ss;
@@ -101,9 +120,21 @@ void GameController::RunGame()
 
 	int renderState = 2;
 	int lastState = -1;
+
+	Mesh* activeModel = &fighter;
+	string activeModelName = "Fighter";
 	//View changes on pressing spacebar
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_postProcessor.Start();
+		//Calculate Frame Rate
+		frameCount++;
+		tFrame++;
+		if (glfwGetTime() - lastTime >= 1.0) {
+			fps = frameCount;
+			frameCount = 0;
+			lastTime = glfwGetTime();
+		}
 
 		if (toolWindow->s_MoveLightEnabled) {
 			renderState = 0;
@@ -122,11 +153,13 @@ void GameController::RunGame()
 		{
 			if (renderState != lastState)
 			{
+				m_shaderPostProcess.SetFloat("amplitude", 0);
+				activeModel = &fighter;
+				activeModelName = "Fighter";
 				//Init light values
 				lightRef.SetPosition(glm::vec3(0, 0, 0.8f));
 
-				//Create fighterRef mesh with advanced lighting
-				fighterRef.SetPosition(glm::vec3(0, 0, 0));
+				//Create fighter mesh with advanced lighting
 				lastState = renderState;
 			}
 
@@ -145,63 +178,90 @@ void GameController::RunGame()
 
 			lightRef.Render(m_camera.GetProjection() * m_camera.GetView());
 
-			fighterRef.SetRotation(fighterRef.GetRotation() + glm::vec3(0.0005f, 0.0f, 0.0f));
-			fighterRef.SetSpecularStrength(toolWindow->s_SpecularStrength);
-			fighterRef.Render(m_camera.GetProjection() * m_camera.GetView());
-
-			ss << std::fixed << std::setprecision(2) << glm::to_string(lightRef.GetSpecularColor());
-			f.RenderText(ss.str(), 10, 150, 0.5f, glm::vec3(1, 1, 0));
-			ss.str("");
-			ss.clear();
+			fighter.SetRotation(fighter.GetRotation() + glm::vec3(0.0005f, 0.0f, 0.0f));
+			fighter.SetSpecularStrength(toolWindow->s_SpecularStrength);
+			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
 		if (renderState == 1) {
 			if (renderState != lastState)
 			{
+				m_shaderPostProcess.SetFloat("amplitude", 0);
+				activeModel = &fighter;
+				activeModelName = "Fighter";
 				lightRef.SetPosition(glm::vec3(-0.5, -0.5, 0.8f));
-				fighterRef.SetRotation(glm::vec3(glm::radians(45.0f), 0, 0));
 				lastState = renderState;
 			}
 
 			if(toolWindow->s_ResetTransform)
 			{
-				fighterRef.SetPosition(glm::vec3(0, 0, 0));
-				fighterRef.SetRotation(glm::vec3(glm::radians(45.0f), 0, 0));
-				fighterRef.SetScale(glm::vec3(0.0008f));
+				fighter.SetPosition(glm::vec3(0, 0, 0));
+				fighter.SetRotation(glm::vec3(glm::radians(45.0f), 0, 0));
+				fighter.SetScale(glm::vec3(0.0008f));
 				toolWindow->s_ResetTransform = false;
 			}
 
 			if(toolWindow->s_TranslateEnabled)
 			{
-				MoveMeshOnMouseClick(fighterRef);
+				MoveMeshOnMouseClick(fighter);
 			}
 
 			if(toolWindow->s_RotateEnabled)
 			{
-				RotateMeshOnMouseClick(fighterRef);
+				RotateMeshOnMouseClick(fighter);
 			}
 
 			if(toolWindow->s_ScaleEnabled)
 			{
-				ScaleMeshOnMouseClick(fighterRef);
+				ScaleMeshOnMouseClick(fighter);
 			}
 			
 			lightRef.Render(m_camera.GetProjection() * m_camera.GetView());
-			fighterRef.Render(m_camera.GetProjection() * m_camera.GetView());
+			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
 		if (renderState == 2) {
 
 			if (renderState != lastState)
 			{
-				
+				activeModel = &fish;
+				activeModelName = "Fish";
+				lightRef.SetPosition(glm::vec3(-0.842649102, 0.247713193, 0.407824963));
+				lastState = renderState;
 			}
+			m_shaderPostProcess.SetFloat("time", glfwGetTime()*2);
+			m_shaderPostProcess.SetFloat("frequency", toolWindow->s_Frequency);
+			m_shaderPostProcess.SetFloat("amplitude", toolWindow->s_Amplitude);
+
+			if (toolWindow->s_WireFrameRender)
+			{
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			}
+
+			if(!toolWindow->s_Tint)
+			{
+				m_shaderPostProcess.SetInt("tint", 0);
+			}
+			else
+			{
+				m_shaderPostProcess.SetInt("tint", 1);
+			}
+
+			fish.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
 		if (renderState == 3) {
 			if (renderState != lastState)
 			{
+				activeModel = &fighter;
+				activeModelName = "Fighter";
+				lightRef.SetPosition(glm::vec3(-0.842649102, 0.247713193, 0.407824963));
+				lastState = renderState;
 			}
+
+			fighter.Render(m_camera.GetProjection()* m_camera.GetView());
+			m_skyBox.Render(m_camera.GetProjection() * m_camera.GetView());
+			m_camera.Rotate();
 		}
 
 		double mouseX, mouseY;
@@ -216,12 +276,43 @@ void GameController::RunGame()
 		if (mouseY > winH) mouseY = winH;
 
 		//Print the mouse position
-		ss << std::fixed << std::setprecision(2) << "Mouse Pos: " << mouseX << " " << mouseY;
-		f.RenderText(ss.str(), 10, 100, 0.5f, glm::vec3(1, 1, 0));
+		ss << std::fixed << std::setprecision(2) << "FPS: " << fps;
+		f.RenderText(ss.str(), 100, 40, 0.4f, glm::vec3(1, 1, 0));
 		ss.str("");
 		ss.clear();
-		f.RenderText(fpsS, 100.0f, 100.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+		ss << std::fixed << std::setprecision(2) << "Mouse Pos: " << mouseX << " " << mouseY;
+		f.RenderText(ss.str(), 100, 65, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+		
+		ss << std::fixed << std::setprecision(2) << "Left Button: " << (glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS ? "Down" : "Up");
+		f.RenderText(ss.str(), 100, 90, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+
+		ss << std::fixed << std::setprecision(2) << "Middle Button: " << (glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS ? "Down" : "Up");
+		f.RenderText(ss.str(), 100, 115, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+
+		ss << std::fixed << std::setprecision(2) << activeModelName << " Position: " << glm::to_string(activeModel->GetPosition());
+		f.RenderText(ss.str(), 100, 140, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+
+		ss << std::fixed << std::setprecision(2) << activeModelName << " Rotation: " << glm::to_string(glm::degrees(activeModel->GetRotation()));
+		f.RenderText(ss.str(), 100, 165, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+
+		ss << std::fixed << std::setprecision(2) << activeModelName << " Scale: " << glm::to_string(activeModel->GetScale());
+		f.RenderText(ss.str(), 100, 190, 0.4f, glm::vec3(1, 1, 0));
+		ss.str("");
+		ss.clear();
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		m_postProcessor.End();
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 

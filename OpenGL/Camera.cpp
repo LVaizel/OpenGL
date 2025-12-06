@@ -34,7 +34,6 @@ void Camera::Rotate()
 {
 	m_angle += 0.01f;
 	m_lookAt.x = cos(glm::radians(m_angle)) * 100;
-	m_lookAt.z = sin(glm::radians(m_angle)) * 100;
 
 	m_view = glm::lookAt(
 		m_position,

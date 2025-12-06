@@ -59,7 +59,7 @@ void main() {
         vec3 refl = reflect(-lightDir, norm);
 
         float lambertianStrength = max(dot(lightDir, norm), 0.0);
-        float specularStrength = pow(max(dot(normalize(retViewDirection), refl), 0.0), material.specularStrength);
+        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
 
         if (lambertianStrength == 0.0) {
             specularStrength = 0.0;

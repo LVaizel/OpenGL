@@ -99,7 +99,6 @@ void PostProcessor::End()
 	m_postProcessingShader->SetTextureSampler("screenTexture", GL_TEXTURE0, 0, m_textureColorBuffer);
 	BindVertices();
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(m_postProcessingShader->GetAttrVertices());

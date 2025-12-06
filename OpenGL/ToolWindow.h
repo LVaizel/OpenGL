@@ -59,10 +59,29 @@ namespace PrimitiveDrawTest {
 		static float s_SpecularG = 100;
 		static float s_SpecularB = 100;
 		static bool s_ResetLight = false;
+
+		static float s_Frequency = 4.0f;
+		static float s_Amplitude = 1.0f;
+
+		static bool s_Tint = false;
+		static bool s_WireFrameRender = false;
+
 	private: System::Windows::Forms::RadioButton^ SpaceScene;
 	private: System::Windows::Forms::CheckBox^ TranslateCheckBox;
 	private: System::Windows::Forms::CheckBox^ RotateCheckBox;
 	private: System::Windows::Forms::CheckBox^ ScaleCheckBox;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Label^ FrequencyLabel;
+
+	private: System::Windows::Forms::TrackBar^ FrequencyScrollbar;
+
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Label^ AmplitudeLabel;
+
+	private: System::Windows::Forms::TrackBar^ AplitudeScrollbar;
+	private: System::Windows::Forms::CheckBox^ TintCheckbox;
+	private: System::Windows::Forms::CheckBox^ WireFrameRenderCheckbox;
+
 	public:
 
 	public:
@@ -123,10 +142,20 @@ namespace PrimitiveDrawTest {
 			this->TranslateCheckBox = (gcnew System::Windows::Forms::CheckBox());
 			this->RotateCheckBox = (gcnew System::Windows::Forms::CheckBox());
 			this->ScaleCheckBox = (gcnew System::Windows::Forms::CheckBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->FrequencyLabel = (gcnew System::Windows::Forms::Label());
+			this->FrequencyScrollbar = (gcnew System::Windows::Forms::TrackBar());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->AmplitudeLabel = (gcnew System::Windows::Forms::Label());
+			this->AplitudeScrollbar = (gcnew System::Windows::Forms::TrackBar());
+			this->TintCheckbox = (gcnew System::Windows::Forms::CheckBox());
+			this->WireFrameRenderCheckbox = (gcnew System::Windows::Forms::CheckBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecStrength))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecR))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecG))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecB))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->FrequencyScrollbar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->AplitudeScrollbar))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// MoveLight
@@ -328,7 +357,7 @@ namespace PrimitiveDrawTest {
 			this->SpaceScene->AutoSize = true;
 			this->SpaceScene->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->SpaceScene->Location = System::Drawing::Point(15, 448);
+			this->SpaceScene->Location = System::Drawing::Point(15, 565);
 			this->SpaceScene->Name = L"SpaceScene";
 			this->SpaceScene->Size = System::Drawing::Size(101, 17);
 			this->SpaceScene->TabIndex = 18;
@@ -370,14 +399,104 @@ namespace PrimitiveDrawTest {
 			this->ScaleCheckBox->UseVisualStyleBackColor = true;
 			this->ScaleCheckBox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::ScaleCheckBox_CheckedChanged);
 			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(12, 424);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(57, 13);
+			this->label1->TabIndex = 24;
+			this->label1->Text = L"Frequency";
+			// 
+			// FrequencyLabel
+			// 
+			this->FrequencyLabel->AutoSize = true;
+			this->FrequencyLabel->Location = System::Drawing::Point(488, 424);
+			this->FrequencyLabel->Name = L"FrequencyLabel";
+			this->FrequencyLabel->Size = System::Drawing::Size(13, 13);
+			this->FrequencyLabel->TabIndex = 23;
+			this->FrequencyLabel->Text = L"4";
+			// 
+			// FrequencyScrollbar
+			// 
+			this->FrequencyScrollbar->BackColor = System::Drawing::SystemColors::Control;
+			this->FrequencyScrollbar->Location = System::Drawing::Point(141, 411);
+			this->FrequencyScrollbar->Maximum = 400;
+			this->FrequencyScrollbar->Name = L"FrequencyScrollbar";
+			this->FrequencyScrollbar->Size = System::Drawing::Size(337, 45);
+			this->FrequencyScrollbar->TabIndex = 22;
+			this->FrequencyScrollbar->TickStyle = System::Windows::Forms::TickStyle::Both;
+			this->FrequencyScrollbar->Value = 400;
+			this->FrequencyScrollbar->Scroll += gcnew System::EventHandler(this, &ToolWindow::Frequency_Scroll);
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(12, 475);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(53, 13);
+			this->label6->TabIndex = 27;
+			this->label6->Text = L"Amplitude";
+			// 
+			// AmplitudeLabel
+			// 
+			this->AmplitudeLabel->AutoSize = true;
+			this->AmplitudeLabel->Location = System::Drawing::Point(488, 475);
+			this->AmplitudeLabel->Name = L"AmplitudeLabel";
+			this->AmplitudeLabel->Size = System::Drawing::Size(13, 13);
+			this->AmplitudeLabel->TabIndex = 26;
+			this->AmplitudeLabel->Text = L"1";
+			// 
+			// AplitudeScrollbar
+			// 
+			this->AplitudeScrollbar->BackColor = System::Drawing::SystemColors::Control;
+			this->AplitudeScrollbar->Location = System::Drawing::Point(141, 462);
+			this->AplitudeScrollbar->Maximum = 100;
+			this->AplitudeScrollbar->Name = L"AplitudeScrollbar";
+			this->AplitudeScrollbar->Size = System::Drawing::Size(337, 45);
+			this->AplitudeScrollbar->TabIndex = 25;
+			this->AplitudeScrollbar->TickStyle = System::Windows::Forms::TickStyle::Both;
+			this->AplitudeScrollbar->Value = 1;
+			this->AplitudeScrollbar->Scroll += gcnew System::EventHandler(this, &ToolWindow::Amplitude_Scroll);
+			// 
+			// TintCheckbox
+			// 
+			this->TintCheckbox->AutoSize = true;
+			this->TintCheckbox->Location = System::Drawing::Point(15, 542);
+			this->TintCheckbox->Name = L"TintCheckbox";
+			this->TintCheckbox->Size = System::Drawing::Size(68, 17);
+			this->TintCheckbox->TabIndex = 29;
+			this->TintCheckbox->Text = L"Tint Blue";
+			this->TintCheckbox->UseVisualStyleBackColor = true;
+			this->TintCheckbox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::TintCheckbox_CheckedChanged);
+			// 
+			// WireFrameRenderCheckbox
+			// 
+			this->WireFrameRenderCheckbox->AutoSize = true;
+			this->WireFrameRenderCheckbox->Location = System::Drawing::Point(15, 518);
+			this->WireFrameRenderCheckbox->Name = L"WireFrameRenderCheckbox";
+			this->WireFrameRenderCheckbox->Size = System::Drawing::Size(115, 17);
+			this->WireFrameRenderCheckbox->TabIndex = 28;
+			this->WireFrameRenderCheckbox->Text = L"WireFrame Render";
+			this->WireFrameRenderCheckbox->UseVisualStyleBackColor = true;
+			this->WireFrameRenderCheckbox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::WireFrameRenderCheckbox_CheckedChanged);
+			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnablePreventFocusChange;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
-			this->ClientSize = System::Drawing::Size(548, 467);
+			this->ClientSize = System::Drawing::Size(548, 625);
 			this->ControlBox = false;
+			this->Controls->Add(this->TintCheckbox);
+			this->Controls->Add(this->WireFrameRenderCheckbox);
+			this->Controls->Add(this->label6);
+			this->Controls->Add(this->AmplitudeLabel);
+			this->Controls->Add(this->AplitudeScrollbar);
+			this->Controls->Add(this->label1);
+			this->Controls->Add(this->FrequencyLabel);
+			this->Controls->Add(this->FrequencyScrollbar);
 			this->Controls->Add(this->ScaleCheckBox);
 			this->Controls->Add(this->RotateCheckBox);
 			this->Controls->Add(this->TranslateCheckBox);
@@ -409,6 +528,8 @@ namespace PrimitiveDrawTest {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecR))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecG))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecB))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->FrequencyScrollbar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->AplitudeScrollbar))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -434,6 +555,12 @@ namespace PrimitiveDrawTest {
 		s_TransformEnabled = Transform->Checked;
 		s_WaterSceneEnabled = WaterScene->Checked;
 		s_SpaceSceneEnabled = SpaceScene->Checked;
+
+		s_Frequency = (float)FrequencyScrollbar->Value / 100;
+		s_Amplitude = (float)AplitudeScrollbar->Value / 100;
+
+		FrequencyLabel->Text = s_Frequency.ToString("F2");
+		AmplitudeLabel->Text = s_Amplitude.ToString("F2");
 	}
 	private: System::Void SpecStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		SpecStrengthVal->Text = SpecStrength->Value.ToString();
@@ -478,6 +605,22 @@ namespace PrimitiveDrawTest {
 	}
 	private: System::Void ScaleCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		s_ScaleEnabled = ScaleCheckBox->Checked;
+	}
+	private: System::Void Frequency_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		float frequency = (float)FrequencyScrollbar->Value / 100;
+		FrequencyLabel->Text = frequency.ToString("F2");
+		s_Frequency = frequency;
+	}
+	private: System::Void Amplitude_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		float amplitude = (float)AplitudeScrollbar->Value / 100;
+		AmplitudeLabel->Text = amplitude.ToString("F2");
+		s_Amplitude = amplitude;
+	}
+	private: System::Void TintCheckbox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_Tint = TintCheckbox->Checked;
+	}
+	private: System::Void WireFrameRenderCheckbox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_WireFrameRender = WireFrameRenderCheckbox->Checked;
 	}
 };
 }
