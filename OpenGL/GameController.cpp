@@ -90,13 +90,13 @@ void GameController::RunGame()
 	asteroid.SetPosition(glm::vec3(0));
 
 	m_skyBox = SkyBox();
-	m_skyBox.Create(&m_shaderSkybox, "../Assets/Textures/SkyBox.obj", {
-		"right.jpg",
-		"left.jpg",
-		"top.jpg",
-		"bottom.jpg",
-		"front.jpg",
-		"back.jpg"
+	m_skyBox.Create(&m_shaderSkybox, "../Assets/Models/SkyBox.obj", {
+		"../Assets/Textures/right.jpg",
+		"../Assets/Textures/left.jpg",
+		"../Assets/Textures/top.jpg",
+		"../Assets/Textures/bottom.jpg",
+		"../Assets/Textures/front.jpg",
+		"../Assets/Textures/back.jpg"
 		});
 
 #pragma endregion
