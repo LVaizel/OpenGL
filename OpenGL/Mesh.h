@@ -36,6 +36,10 @@ private:
 	glm::vec3 m_color;
 	glm::vec3 m_cameraPosition;
 
+	//Lighting
+	float m_specularStrength;
+	glm::vec3 m_specularColor;
+
 	//Methods
 	void SetShaderVariables(glm::mat4 _pv);
 	void BindAttributes();
@@ -55,10 +59,18 @@ public:
 	glm::vec3 GetPosition() { return m_position; }
 	
 	void SetScale(glm::vec3 _scale) { m_scale = _scale; }
+	glm::vec3 GetScale() { return m_scale; }
+
 	void SetCameraPosition(glm::vec3 _cameraPos) { m_cameraPosition = _cameraPos; }
 
 	void SetColor(glm::vec3 _color) { m_color = _color; }
 	glm::vec3 GetColor() { return m_color; }
+
+	void SetSpecularStrength(float _strength) { m_specularStrength = _strength; }
+	float GetSpecularStrength() { return m_specularStrength; }
+
+	void SetSpecularColor(glm::vec3 _color) { m_specularColor = _color; }
+	glm::vec3 GetSpecularColor() { return m_specularColor; }
 
 	//Methods
 	void Create(Shader* _shader, string _file, int _instanceCount = 1);

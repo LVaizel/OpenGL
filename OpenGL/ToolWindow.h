@@ -18,10 +18,13 @@ namespace PrimitiveDrawTest {
 		static bool RenderRedChannel;
 		static bool RenderGreenChannel;
 	private: System::Windows::Forms::RadioButton^ MoveLight;
-	private: System::Windows::Forms::RadioButton^ ColorByPosition;
-	private: System::Windows::Forms::RadioButton^ MoveCubesToSphere;
+	private: System::Windows::Forms::RadioButton^ Transform;
+	private: System::Windows::Forms::RadioButton^ WaterScene;
+
+
 	private: System::Windows::Forms::Button^ ResetLightPosition;
-	private: System::Windows::Forms::Button^ ResetTeapotPosition;
+	private: System::Windows::Forms::Button^ ResetTransform;
+
 	private: System::Windows::Forms::TrackBar^ SpecStrength;
 	private: System::Windows::Forms::TrackBar^ SpecR;
 	private: System::Windows::Forms::TrackBar^ SpecG;
@@ -43,15 +46,27 @@ namespace PrimitiveDrawTest {
 
 	public:
 		static bool s_MoveLightEnabled = true;
-		static bool s_ColorByPositionEnabled = false;
-		static bool s_MoveCubesToSphereEnabled = false;
+		static bool s_TransformEnabled = false;
+		static bool s_WaterSceneEnabled = false;
+		static bool s_SpaceSceneEnabled = false;
+
+		static bool s_TranslateEnabled = false;
+		static bool s_RotateEnabled = false;
+		static bool s_ScaleEnabled = false;
 
 		static int s_SpecularStrength = 4;
 		static float s_SpecularR = 100;
 		static float s_SpecularG = 100;
 		static float s_SpecularB = 100;
 		static bool s_ResetLight = false;
-		static bool s_ResetTeapot = false;
+	private: System::Windows::Forms::RadioButton^ SpaceScene;
+	private: System::Windows::Forms::CheckBox^ TranslateCheckBox;
+	private: System::Windows::Forms::CheckBox^ RotateCheckBox;
+	private: System::Windows::Forms::CheckBox^ ScaleCheckBox;
+	public:
+
+	public:
+		static bool s_ResetTransform = false;
 
 
 		ToolWindow(void)
@@ -87,10 +102,10 @@ namespace PrimitiveDrawTest {
 		void InitializeComponent(void)
 		{
 			this->MoveLight = (gcnew System::Windows::Forms::RadioButton());
-			this->ColorByPosition = (gcnew System::Windows::Forms::RadioButton());
-			this->MoveCubesToSphere = (gcnew System::Windows::Forms::RadioButton());
+			this->Transform = (gcnew System::Windows::Forms::RadioButton());
+			this->WaterScene = (gcnew System::Windows::Forms::RadioButton());
 			this->ResetLightPosition = (gcnew System::Windows::Forms::Button());
-			this->ResetTeapotPosition = (gcnew System::Windows::Forms::Button());
+			this->ResetTransform = (gcnew System::Windows::Forms::Button());
 			this->SpecStrength = (gcnew System::Windows::Forms::TrackBar());
 			this->SpecR = (gcnew System::Windows::Forms::TrackBar());
 			this->SpecG = (gcnew System::Windows::Forms::TrackBar());
@@ -104,6 +119,10 @@ namespace PrimitiveDrawTest {
 			this->SpecRVal = (gcnew System::Windows::Forms::Label());
 			this->SpecGVal = (gcnew System::Windows::Forms::Label());
 			this->SpecBVal = (gcnew System::Windows::Forms::Label());
+			this->SpaceScene = (gcnew System::Windows::Forms::RadioButton());
+			this->TranslateCheckBox = (gcnew System::Windows::Forms::CheckBox());
+			this->RotateCheckBox = (gcnew System::Windows::Forms::CheckBox());
+			this->ScaleCheckBox = (gcnew System::Windows::Forms::CheckBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecStrength))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecR))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SpecG))->BeginInit();
@@ -125,33 +144,33 @@ namespace PrimitiveDrawTest {
 			this->MoveLight->UseVisualStyleBackColor = true;
 			this->MoveLight->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::MoveLight_CheckedChanged);
 			// 
-			// ColorByPosition
+			// Transform
 			// 
-			this->ColorByPosition->AutoSize = true;
-			this->ColorByPosition->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->Transform->AutoSize = true;
+			this->Transform->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->ColorByPosition->Location = System::Drawing::Point(15, 268);
-			this->ColorByPosition->Name = L"ColorByPosition";
-			this->ColorByPosition->Size = System::Drawing::Size(121, 17);
-			this->ColorByPosition->TabIndex = 1;
-			this->ColorByPosition->TabStop = true;
-			this->ColorByPosition->Text = L"Color By Position";
-			this->ColorByPosition->UseVisualStyleBackColor = true;
-			this->ColorByPosition->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::ColorByPosition_CheckedChanged);
+			this->Transform->Location = System::Drawing::Point(15, 268);
+			this->Transform->Name = L"Transform";
+			this->Transform->Size = System::Drawing::Size(81, 17);
+			this->Transform->TabIndex = 1;
+			this->Transform->TabStop = true;
+			this->Transform->Text = L"Transform";
+			this->Transform->UseVisualStyleBackColor = true;
+			this->Transform->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::Transform_CheckedChanged);
 			// 
-			// MoveCubesToSphere
+			// WaterScene
 			// 
-			this->MoveCubesToSphere->AutoSize = true;
-			this->MoveCubesToSphere->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->WaterScene->AutoSize = true;
+			this->WaterScene->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->MoveCubesToSphere->Location = System::Drawing::Point(15, 324);
-			this->MoveCubesToSphere->Name = L"MoveCubesToSphere";
-			this->MoveCubesToSphere->Size = System::Drawing::Size(158, 17);
-			this->MoveCubesToSphere->TabIndex = 2;
-			this->MoveCubesToSphere->TabStop = true;
-			this->MoveCubesToSphere->Text = L"Move Cubes To Sphere";
-			this->MoveCubesToSphere->UseVisualStyleBackColor = true;
-			this->MoveCubesToSphere->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::MoveCubesToSphere_CheckedChanged);
+			this->WaterScene->Location = System::Drawing::Point(15, 393);
+			this->WaterScene->Name = L"WaterScene";
+			this->WaterScene->Size = System::Drawing::Size(99, 17);
+			this->WaterScene->TabIndex = 2;
+			this->WaterScene->TabStop = true;
+			this->WaterScene->Text = L"Water Scene";
+			this->WaterScene->UseVisualStyleBackColor = true;
+			this->WaterScene->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::WaterScene_CheckedChanged);
 			// 
 			// ResetLightPosition
 			// 
@@ -165,17 +184,17 @@ namespace PrimitiveDrawTest {
 			this->ResetLightPosition->UseVisualStyleBackColor = true;
 			this->ResetLightPosition->Click += gcnew System::EventHandler(this, &ToolWindow::ResetLightPosition_Click);
 			// 
-			// ResetTeapotPosition
+			// ResetTransform
 			// 
-			this->ResetTeapotPosition->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->ResetTeapotPosition->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->ResetTeapotPosition->Location = System::Drawing::Point(28, 292);
-			this->ResetTeapotPosition->Name = L"ResetTeapotPosition";
-			this->ResetTeapotPosition->Size = System::Drawing::Size(123, 23);
-			this->ResetTeapotPosition->TabIndex = 4;
-			this->ResetTeapotPosition->Text = L"Reset Teapot Position";
-			this->ResetTeapotPosition->UseVisualStyleBackColor = true;
-			this->ResetTeapotPosition->Click += gcnew System::EventHandler(this, &ToolWindow::ResetTeapotPosition_Click);
+			this->ResetTransform->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->ResetTransform->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->ResetTransform->Location = System::Drawing::Point(28, 292);
+			this->ResetTransform->Name = L"ResetTransform";
+			this->ResetTransform->Size = System::Drawing::Size(123, 23);
+			this->ResetTransform->TabIndex = 4;
+			this->ResetTransform->Text = L"Reset Transform";
+			this->ResetTransform->UseVisualStyleBackColor = true;
+			this->ResetTransform->Click += gcnew System::EventHandler(this, &ToolWindow::ResetTransform_Click);
 			// 
 			// SpecStrength
 			// 
@@ -304,14 +323,65 @@ namespace PrimitiveDrawTest {
 			this->SpecBVal->TabIndex = 17;
 			this->SpecBVal->Text = L"100";
 			// 
+			// SpaceScene
+			// 
+			this->SpaceScene->AutoSize = true;
+			this->SpaceScene->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->SpaceScene->Location = System::Drawing::Point(15, 448);
+			this->SpaceScene->Name = L"SpaceScene";
+			this->SpaceScene->Size = System::Drawing::Size(101, 17);
+			this->SpaceScene->TabIndex = 18;
+			this->SpaceScene->TabStop = true;
+			this->SpaceScene->Text = L"Space Scene";
+			this->SpaceScene->UseVisualStyleBackColor = true;
+			this->SpaceScene->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::SpaceScene_CheckedChanged);
+			// 
+			// TranslateCheckBox
+			// 
+			this->TranslateCheckBox->AutoSize = true;
+			this->TranslateCheckBox->Location = System::Drawing::Point(28, 322);
+			this->TranslateCheckBox->Name = L"TranslateCheckBox";
+			this->TranslateCheckBox->Size = System::Drawing::Size(70, 17);
+			this->TranslateCheckBox->TabIndex = 19;
+			this->TranslateCheckBox->Text = L"Translate";
+			this->TranslateCheckBox->UseVisualStyleBackColor = true;
+			this->TranslateCheckBox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::TranslateCheckBox_CheckedChanged);
+			// 
+			// RotateCheckBox
+			// 
+			this->RotateCheckBox->AutoSize = true;
+			this->RotateCheckBox->Location = System::Drawing::Point(28, 346);
+			this->RotateCheckBox->Name = L"RotateCheckBox";
+			this->RotateCheckBox->Size = System::Drawing::Size(58, 17);
+			this->RotateCheckBox->TabIndex = 20;
+			this->RotateCheckBox->Text = L"Rotate";
+			this->RotateCheckBox->UseVisualStyleBackColor = true;
+			this->RotateCheckBox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::RotateCheckBox_CheckedChanged);
+			// 
+			// ScaleCheckBox
+			// 
+			this->ScaleCheckBox->AutoSize = true;
+			this->ScaleCheckBox->Location = System::Drawing::Point(28, 370);
+			this->ScaleCheckBox->Name = L"ScaleCheckBox";
+			this->ScaleCheckBox->Size = System::Drawing::Size(53, 17);
+			this->ScaleCheckBox->TabIndex = 21;
+			this->ScaleCheckBox->Text = L"Scale";
+			this->ScaleCheckBox->UseVisualStyleBackColor = true;
+			this->ScaleCheckBox->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::ScaleCheckBox_CheckedChanged);
+			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnablePreventFocusChange;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
-			this->ClientSize = System::Drawing::Size(548, 352);
+			this->ClientSize = System::Drawing::Size(548, 467);
 			this->ControlBox = false;
+			this->Controls->Add(this->ScaleCheckBox);
+			this->Controls->Add(this->RotateCheckBox);
+			this->Controls->Add(this->TranslateCheckBox);
+			this->Controls->Add(this->SpaceScene);
 			this->Controls->Add(this->SpecBVal);
 			this->Controls->Add(this->SpecGVal);
 			this->Controls->Add(this->SpecRVal);
@@ -325,10 +395,10 @@ namespace PrimitiveDrawTest {
 			this->Controls->Add(this->SpecG);
 			this->Controls->Add(this->SpecR);
 			this->Controls->Add(this->SpecStrength);
-			this->Controls->Add(this->ResetTeapotPosition);
+			this->Controls->Add(this->ResetTransform);
 			this->Controls->Add(this->ResetLightPosition);
-			this->Controls->Add(this->MoveCubesToSphere);
-			this->Controls->Add(this->ColorByPosition);
+			this->Controls->Add(this->WaterScene);
+			this->Controls->Add(this->Transform);
 			this->Controls->Add(this->MoveLight);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"ToolWindow";
@@ -361,8 +431,9 @@ namespace PrimitiveDrawTest {
 		SpecBVal->Text = s_SpecularB.ToString();
 
 		s_MoveLightEnabled = MoveLight->Checked;
-		s_ColorByPositionEnabled = ColorByPosition->Checked;
-		s_MoveCubesToSphereEnabled = MoveCubesToSphere->Checked;
+		s_TransformEnabled = Transform->Checked;
+		s_WaterSceneEnabled = WaterScene->Checked;
+		s_SpaceSceneEnabled = SpaceScene->Checked;
 	}
 	private: System::Void SpecStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		SpecStrengthVal->Text = SpecStrength->Value.ToString();
@@ -384,17 +455,29 @@ namespace PrimitiveDrawTest {
 	private: System::Void ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
 		s_ResetLight = true;
 	}
-	private: System::Void ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-		s_ResetTeapot = true;
+	private: System::Void ResetTransform_Click(System::Object^ sender, System::EventArgs^ e) {
+		s_ResetTransform = true;
 	}
 	private: System::Void MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		s_MoveLightEnabled = MoveLight->Checked;
 	}
-	private: System::Void ColorByPosition_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		s_ColorByPositionEnabled = ColorByPosition->Checked;
+	private: System::Void Transform_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_TransformEnabled = Transform->Checked;
 	}
-	private: System::Void MoveCubesToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		s_MoveCubesToSphereEnabled = MoveCubesToSphere->Checked;
+	private: System::Void WaterScene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_WaterSceneEnabled = WaterScene->Checked;
 	}
-	};
+	private: System::Void SpaceScene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_SpaceSceneEnabled = SpaceScene->Checked;
+	}
+	private: System::Void TranslateCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_TranslateEnabled = TranslateCheckBox->Checked;
+	}
+	private: System::Void RotateCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_RotateEnabled = RotateCheckBox->Checked;
+	}
+	private: System::Void ScaleCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		s_ScaleEnabled = ScaleCheckBox->Checked;
+	}
+};
 }

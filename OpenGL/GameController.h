@@ -26,6 +26,9 @@ public:
 	virtual ~GameController();
 	void Initialize();
 	void RunGame();
+	void MoveMeshOnMouseClick(Mesh& _mesh);
+	void RotateMeshOnMouseClick(Mesh& _mesh);
+	void ScaleMeshOnMouseClick(Mesh& _mesh);
 };
 
 #endif // GAMECONTROLLER_H
