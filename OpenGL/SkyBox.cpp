@@ -74,8 +74,8 @@ void SkyBox::Render(glm::mat4 _pv)
 	glUseProgram(m_shader->GetProgramID());
 	SetShaderVariables(_pv);
 	BindAttributes();
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());
-	glDisableVertexAttribArray(m_shader->GetAttrNormals());
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size()/3);
+	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);

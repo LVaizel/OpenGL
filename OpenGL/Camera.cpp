@@ -30,14 +30,31 @@ Camera::Camera(Resolution _screenResolution)
 	);
 }
 
+void Camera::ResetLookAt()
+{
+	m_view = glm::mat4(1.0f);
+
+	m_rotation = glm::vec3(0, 0, 0);
+	m_lookAt = glm::vec3(0, 0, 0);
+	m_angle = 0.0f;
+
+	//Or for ortho camera
+	//glm::mat4 projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.0f);
+
+	m_view = glm::lookAt(
+		m_position,
+		m_lookAt,
+		glm::vec3(0, 1, 0)  //Head is up (set to 0, 1, 0 to look upside-down)
+	);
+}
 void Camera::Rotate()
 {
-	m_angle += 0.01f;
+	m_angle += 0.1f;
 	float rad = glm::radians(m_angle);
 	m_lookAt = glm::vec3(
-		cos(rad),
+		cos(rad) * 100,
 		0.0f,
-		sin(rad)
+		sin(rad) * 100
 	);
 
 	m_view = glm::lookAt(

@@ -22,6 +22,7 @@ public:
 	glm::mat4 GetView() const { return m_view; }
 	glm::vec3 GetPosition() const { return m_position; }
 	glm::vec3 GetLookAt() const { return m_lookAt; }
+	void ResetLookAt();
 
 	void Rotate();
 };

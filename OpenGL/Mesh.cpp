@@ -126,9 +126,13 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		srand(glfwGetTime());
 		for (unsigned int i = 0; i < m_instanceCount; i++)
 		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(-400 + rand() % 800, -100 + rand() % 200, -400 + rand() % 400));
+			glm::vec3 instancePos = glm::vec3(m_position.x + (-300 + rand() % 600), m_position.y + (-25 + rand() % 50), m_position.z + (-300 + rand() % 600));
 
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), instancePos);
+			model = glm::rotate(model, (float)(rand() % 360), glm::vec3(0, 1, 0));
+			model = glm::rotate(model, (float)(rand() % 360), glm::vec3(1, 0, 0));
+			model = glm::rotate(model, (float)(rand() % 360), glm::vec3(0, 0, 1));
+			model = glm::scale(model, glm::vec3(1) * 0.3f + ((float)(rand() % 100) / 1000.0f));
 			for (int x = 0; x < 4; x++)
 				for (int y = 0; y < 4; y++)
 					m_instanceData.push_back(model[x][y]);

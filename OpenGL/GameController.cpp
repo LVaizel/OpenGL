@@ -87,7 +87,7 @@ void GameController::RunGame()
 
 	Mesh asteroid = Mesh();
 	asteroid.Create(&m_shaderDiffuse, "../Assets/Models/Asteroid.obj", 50);
-	asteroid.SetPosition(m_camera.GetPosition());
+	asteroid.SetPosition(fighter.GetPosition());
 	asteroid.SetScale(glm::vec3(0.01));
 
 	m_skyBox = SkyBox();
@@ -154,6 +154,7 @@ void GameController::RunGame()
 		{
 			if (renderState != lastState)
 			{
+				m_camera.ResetLookAt();
 				m_shaderPostProcess.SetFloat("amplitude", 0);
 				activeModel = &fighter;
 				activeModelName = "Fighter";
@@ -185,6 +186,7 @@ void GameController::RunGame()
 		}
 
 		if (renderState == 1) {
+			m_camera.ResetLookAt();
 			if (renderState != lastState)
 			{
 				m_shaderPostProcess.SetFloat("amplitude", 0);
@@ -221,10 +223,13 @@ void GameController::RunGame()
 			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
+		//In the video it seemed that not only a sin wave but a cos wave was also applied
+		//So I applied both fpr the water effect in the shder file
 		if (renderState == 2) {
 
 			if (renderState != lastState)
 			{
+				m_camera.ResetLookAt();
 				activeModel = &fish;
 				activeModelName = "Fish";
 				lightRef.SetPosition(glm::vec3(-0.842649102, 0.247713193, 0.407824963));
@@ -259,12 +264,13 @@ void GameController::RunGame()
 				lightRef.SetPosition(glm::vec3(-0.842649102, 0.247713193, 0.407824963));
 				fighter.SetPosition(glm::vec3(0, 0, 0));
 				fighter.SetRotation(glm::vec3(0, 0, 0));
+				fighter.SetScale(glm::vec3(0.0008f));
 				lastState = renderState;
 			}
-			m_skyBox.Render(m_camera.GetProjection()* mat4);
+			m_skyBox.Render(m_camera.GetProjection()* glm::mat4(glm::mat3(m_camera.GetView())));
 			m_camera.Rotate();
 			asteroid.Render(m_camera.GetProjection()* m_camera.GetView());
-			//m_camera.Rotate();
+			fighter.Render(m_camera.GetProjection()* m_camera.GetView());
 		}
 
 		double mouseX, mouseY;
