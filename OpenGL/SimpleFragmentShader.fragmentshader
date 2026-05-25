@@ -1,0 +1,13 @@
+#version 120 // OpenGL version 2.1 (minimum requirement)
+
+in vec3 retColor; // Input from vertex shader
+in vec2 retTexCoords;
+
+out vec4 fragColor; // Output color
+
+uniform sampler2D sampler1;
+uniform sampler2D sampler2;
+
+void main() {
+	fragColor = mix(texture2D(sampler1, retTexCoords), texture2D(sampler2, retTexCoords), 0.3) * vec4(retColor, 1.0f);
+}

@@ -24,6 +24,7 @@
     <ProjectGuid>{964b233e-7f25-4494-be19-4b6202921fe5}</ProjectGuid>
     <RootNamespace>OpenGL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>7.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -31,6 +32,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -70,19 +72,29 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ManagedAssembly>true</ManagedAssembly>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glew-2.1.0\include;$(SolutionDir)External\glfw-3.3.4\include;$(SolutionDir)External\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glew-2.1.0\include;$(SolutionDir)External\glfw-3.3.4\include;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\obj_loader;$(SolutionDir)External\freetype-2.10.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\glew-2.1.0\lib;$(SolutionDir)External\glfw-3.3.4\lib-vc2019;$(SolutionDir)External\freetype-2.10.4\release static\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32d.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <PreBuildEvent>
+      <Command>copy /Y "$(SolutionDir)\External\glew-2.1.0\bin\glew32d.dll" "$(TargetDir)"
+copy /Y "$(SolutionDir)\External\glfw-3.3.4\lib-vc2019\glfw3.dll" "$(TargetDir)"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -129,7 +141,64 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Fonts.cpp" />
+    <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="PostProcessor.cpp" />
+    <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ToolWindow.cpp" />
+    <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="WindowController.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CustomMatrix.h" />
+    <ClInclude Include="Fonts.h" />
+    <ClInclude Include="GameController.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="PostProcessor.h" />
+    <ClInclude Include="Resolution.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="StandardIncludes.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="ToolWindow.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Unit.h" />
+    <ClInclude Include="WindowController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Color.fragmentshader" />
+    <None Include="Color.vertexshader" />
+    <None Include="Diffuse.fragmentshader" />
+    <None Include="Diffuse.vertexshader" />
+    <None Include="Font.fragmentshader" />
+    <None Include="Font.vertexshader" />
+    <None Include="PostProcessor.fragmentshader" />
+    <None Include="PostProcessor.vertexshader" />
+    <None Include="SimpleFragmentShader.fragmentshader" />
+    <None Include="SimpleVertexShader.vertexshader" />
+    <None Include="SkyBox.fragmentshader" />
+    <None Include="SkyBox.vertexshader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ToolWindow.resx">
+      <DependentUpon>ToolWindow.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

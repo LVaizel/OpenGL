@@ -1,0 +1,77 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+#define NR_LIGHTS 4
+
+in vec3 retNormal; // Input from vertex shader
+in vec2 retTexCoords;
+in vec3 retFragPos;
+in vec3 retViewDirection;
+in mat4 retWorld;
+in mat3 retTBN;
+
+out vec4 fragColor; // Output color
+
+struct Material {
+    float specularStrength;
+    sampler2D diffuseTexture;
+    sampler2D specularTexture;
+    sampler2D normalTexture;
+};
+
+struct Light {
+    vec3 position;
+    vec3 color;
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 direction;
+    float coneAngle;
+    float fallOff;
+};
+
+uniform Material material;
+uniform Light light[NR_LIGHTS];
+uniform bool EnableNormalMap = false;
+
+void main() {
+    vec3 norm = normalize(retNormal);
+    if(EnableNormalMap) {
+        norm = texture(material.normalTexture, retTexCoords).rgb;
+        norm = normalize(norm * 2.0 - 1.0);
+        norm = normalize(retTBN * norm);
+    }
+
+    vec4 diffuseTex = texture(material.diffuseTexture, retTexCoords);
+    if(diffuseTex.a == 0.0)
+        discard;
+
+    vec3 finalColor = vec3(0);
+    vec4 specularTex = texture(material.specularTexture, retTexCoords);
+
+    
+    for(int i = 0; i < NR_LIGHTS; i++){
+        vec3 lightDir = normalize(light[i].position - retFragPos);
+        
+        vec3 refl = reflect(-lightDir, norm);
+
+        float lambertianStrength = max(dot(lightDir, norm), 0.0);
+        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0), material.specularStrength);
+
+        if (lambertianStrength == 0.0) {
+            specularStrength = 0.0;
+        }
+
+        vec3 ambient = diffuseTex.rgb * light[i].ambientColor / NR_LIGHTS;
+        vec3 lambertian = lambertianStrength * diffuseTex.rgb * light[i].diffuseColor;
+        vec3 specular = specularStrength * specularTex.rgb * light[i].specularColor;
+            
+        finalColor += vec3(ambient + lambertian + specular);
+    }
+
+    fragColor = vec4(finalColor, diffuseTex.a);
+    //fragColor = vec4(1, 0, 0, 1);
+}

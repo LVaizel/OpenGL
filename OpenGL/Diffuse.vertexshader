@@ -1,0 +1,44 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+
+in vec3 vertices; // Vertex position input
+in vec3 normals;
+in vec2 texCoords;
+in vec3 tangents;
+in vec3 bitangents;
+layout (location = 10) in mat4 instanceMatrix;
+
+uniform vec3 CameraPosition;
+uniform mat4 World;
+uniform mat4 WVP;
+uniform bool EnableInstancing = false;
+
+out vec3 retNormal;
+out vec2 retTexCoords;
+out vec3 retFragPos;
+out vec3 retViewDirection;
+out mat4 retWorld;
+out mat3 retTBN;
+
+void main() {
+	mat4 finalWorld = World;
+	if(EnableInstancing){
+		finalWorld *= instanceMatrix;
+		gl_Position = WVP * instanceMatrix * vec4(vertices, 1.0);
+	}
+	else
+	{
+		gl_Position = WVP * vec4(vertices, 1.0); // Pass through shader, pass the vertex position to next shader
+	}
+	
+	
+	retNormal = normalize(mat3(transpose(inverse(finalWorld))) * normals);
+	retTexCoords = texCoords;
+	retFragPos = vec3(finalWorld * vec4(vertices, 1.0));
+	retViewDirection = normalize(CameraPosition - retFragPos);
+	retWorld = transpose(inverse(finalWorld));
+
+	vec3 T = normalize(vec3(finalWorld * vec4(tangents, 0.0)));
+	vec3 B = normalize(vec3(finalWorld * vec4(bitangents, 0.0)));
+	vec3 N = normalize(vec3(finalWorld * vec4(normals, 0.0)));
+	retTBN = mat3(T, B, N);
+}

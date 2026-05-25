@@ -1,0 +1,11 @@
+#version 330 core // OpenGL version 3.3 (minimum requirement)
+
+in vec3 vertices; // Vertex position input
+in vec2 texCoords;
+
+out vec2 retTexCoords;
+
+void main() {
+	gl_Position = vec4(vertices.x, vertices.y, 0.0, 1.0);
+	retTexCoords = texCoords;
+}
